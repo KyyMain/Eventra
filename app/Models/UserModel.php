@@ -17,7 +17,7 @@ class UserModel extends Model
     ];
 
     protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
+    protected bool $updateOnlyChanged = false;
 
     protected array $casts = [];
     protected array $castHandlers = [];
@@ -31,9 +31,9 @@ class UserModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'username' => 'required|min_length[3]|max_length[100]|is_unique[users.username,id,{id}]',
-        'email'    => 'required|valid_email|is_unique[users.email,id,{id}]',
-        'password' => 'required|min_length[6]',
+        'username' => 'required|min_length[3]|max_length[100]',
+        'email'    => 'required|valid_email',
+        'password' => 'permit_empty|min_length[6]',
         'full_name' => 'required|min_length[3]|max_length[255]',
         'role'     => 'required|in_list[admin,user]'
     ];
@@ -54,9 +54,23 @@ class UserModel extends Model
 
     protected function hashPassword(array $data)
     {
+        log_message('debug', 'UserModel: hashPassword called with data structure: ' . json_encode(array_keys($data)));
+        
         if (isset($data['data']['password'])) {
-            $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
+            $originalPassword = $data['data']['password'];
+            log_message('debug', 'UserModel: Original password length: ' . strlen($originalPassword));
+            
+            // Hash the password
+            $hashedPassword = password_hash($originalPassword, PASSWORD_DEFAULT);
+            $data['data']['password'] = $hashedPassword;
+            
+            log_message('debug', 'UserModel: Password hashed successfully, hash length: ' . strlen($hashedPassword));
+            log_message('debug', 'UserModel: Hash starts with: ' . substr($hashedPassword, 0, 20) . '...');
+        } else {
+            log_message('debug', 'UserModel: No password field found in data');
+            log_message('debug', 'UserModel: Available data keys: ' . json_encode(array_keys($data['data'] ?? [])));
         }
+        
         return $data;
     }
 

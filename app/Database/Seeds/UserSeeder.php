@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
             [
                 'username'   => 'admin',
                 'email'      => 'admin@eventra.com',
-                'password'   => password_hash('admin123', PASSWORD_DEFAULT),
+                'password'   => password_hash('Admin123#', PASSWORD_DEFAULT),
                 'full_name'  => 'Administrator',
                 'phone'      => '081234567890',
                 'role'       => 'admin',

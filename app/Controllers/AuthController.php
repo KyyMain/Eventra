@@ -151,15 +151,66 @@ class AuthController extends BaseController
         $userId = session()->get('user_id');
         $validation = \Config\Services::validation();
         
-        $validation->setRules([
-            'username' => "required|min_length[3]|max_length[100]|is_unique[users.username,id,{$userId}]",
-            'email' => "required|valid_email|is_unique[users.email,id,{$userId}]",
+        // Get current user data
+        $currentUser = $this->userModel->find($userId);
+        
+        // Base validation rules
+        $rules = [
+            'username' => 'required|min_length[3]|max_length[100]',
+            'email' => 'required|valid_email',
             'full_name' => 'required|min_length[3]|max_length[255]',
             'phone' => 'permit_empty|min_length[10]|max_length[20]'
-        ]);
+        ];
+        
+        // Add password validation only if new password is provided
+        $newPassword = $this->request->getPost('new_password');
+        if (!empty($newPassword)) {
+            $rules['new_password'] = 'required|min_length[8]';
+            $rules['confirm_password'] = 'required|matches[new_password]';
+        }
+        
+        $validation->setRules($rules);
 
         if (!$validation->withRequest($this->request)->run()) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+            $user = $this->userModel->find($userId);
+            $data = [
+                'title' => 'Profile - Eventra',
+                'user' => $user,
+                'errors' => $validation->getErrors()
+            ];
+            return view('auth/profile', $data);
+        }
+
+        // Manual unique validation
+        $username = $this->request->getPost('username');
+        $email = $this->request->getPost('email');
+        
+        // Check if username is unique (excluding current user)
+        if ($username !== $currentUser['username']) {
+            $existingUser = $this->userModel->where('username', $username)->where('id !=', $userId)->first();
+            if ($existingUser) {
+                $user = $this->userModel->find($userId);
+                $data = [
+                    'title' => 'Profile - Eventra',
+                    'user' => $user,
+                    'errors' => ['username' => 'Username sudah digunakan oleh user lain.']
+                ];
+                return view('auth/profile', $data);
+            }
+        }
+        
+        // Check if email is unique (excluding current user)
+        if ($email !== $currentUser['email']) {
+            $existingUser = $this->userModel->where('email', $email)->where('id !=', $userId)->first();
+            if ($existingUser) {
+                $user = $this->userModel->find($userId);
+                $data = [
+                    'title' => 'Profile - Eventra',
+                    'user' => $user,
+                    'errors' => ['email' => 'Email sudah digunakan oleh user lain.']
+                ];
+                return view('auth/profile', $data);
+            }
         }
 
         $userData = [
@@ -170,15 +221,29 @@ class AuthController extends BaseController
         ];
 
         // Update password if provided
-        $newPassword = $this->request->getPost('new_password');
         if (!empty($newPassword)) {
-            if (strlen($newPassword) < 6) {
-                return redirect()->back()->withInput()->with('error', 'Password minimal 6 karakter.');
-            }
+            log_message('debug', 'AuthController: New password provided, length: ' . strlen($newPassword));
             $userData['password'] = $newPassword;
+        } else {
+            log_message('debug', 'AuthController: No new password provided');
         }
 
+        log_message('debug', 'AuthController: Updating user data: ' . json_encode(array_keys($userData)));
+        
+        // Get current user data for comparison
+        $currentUser = $this->userModel->find($userId);
+        log_message('debug', 'AuthController: Current password hash: ' . substr($currentUser['password'], 0, 20) . '...');
+        
         if ($this->userModel->update($userId, $userData)) {
+            log_message('debug', 'AuthController: User update successful');
+            
+            // Verify password was updated if provided
+            if (!empty($newPassword)) {
+                $updatedUser = $this->userModel->find($userId);
+                log_message('debug', 'AuthController: New password hash: ' . substr($updatedUser['password'], 0, 20) . '...');
+                log_message('debug', 'AuthController: Password changed: ' . ($currentUser['password'] !== $updatedUser['password'] ? 'YES' : 'NO'));
+            }
+            
             // Update session data
             session()->set([
                 'username' => $userData['username'],
@@ -186,9 +251,12 @@ class AuthController extends BaseController
                 'full_name' => $userData['full_name']
             ]);
 
-            return redirect()->back()->with('success', 'Profile berhasil diupdate.');
+            return redirect()->to('/auth/profile')->with('success', 'Profile berhasil diupdate.');
         } else {
-            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat update profile.');
+            log_message('error', 'AuthController: User update failed');
+            log_message('error', 'AuthController: UserModel errors: ' . json_encode($this->userModel->errors()));
+            log_message('error', 'AuthController: Database error: ' . json_encode($this->userModel->db->error()));
+            return redirect()->to('/auth/profile')->with('error', 'Terjadi kesalahan saat update profile.');
         }
     }
 }
