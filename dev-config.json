@@ -1,0 +1,24 @@
+{
+    "scripts": {
+        "dev": "php -S localhost:8000 -t public",
+        "dev:xampp": "echo 'Configure XAMPP to point to public/ directory'",
+        "migrate": "php spark migrate",
+        "seed": "php spark db:seed",
+        "key:generate": "php spark key:generate",
+        "cache:clear": "php spark cache:clear",
+        "route:list": "php spark routes"
+    },
+    "development": {
+        "servers": {
+            "built-in": {
+                "command": "php -S localhost:8000 -t public",
+                "url": "http://localhost:8000",
+                "description": "Built-in PHP development server"
+            },
+            "xampp": {
+                "url": "http://localhost/Eventra1",
+                "description": "XAMPP Apache server"
+            }
+        }
+    }
+}

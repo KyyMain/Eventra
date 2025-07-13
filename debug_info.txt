@@ -1,0 +1,26 @@
+EVENTRA APPLICATION DEBUG INFO
+=============================
+
+Server Status: Running
+Development Server URL: http://localhost:8080
+Base URL Configuration: http://localhost:8080/
+
+CORRECT URLs to access:
+- Home/Login: http://localhost:8080/
+- Register: http://localhost:8080/auth/register
+- Login: http://localhost:8080/auth/login
+
+WRONG URLs (will show "Not Found"):
+- http://localhost/auth/register (missing port 8080)
+- http://localhost/Eventra1/auth/register (wrong path)
+
+DEMO ACCOUNTS:
+- Admin: admin@eventra.com / admin123
+- User: user@eventra.com / user123
+
+TROUBLESHOOTING:
+1. Make sure you access http://localhost:8080 (with port 8080)
+2. If still getting "Not Found", restart the server with: php spark serve
+3. Check that XAMPP Apache is not conflicting (you can stop Apache in XAMPP)
+
+Generated: <?= date('Y-m-d H:i:s') ?>
