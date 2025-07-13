@@ -1,246 +1,376 @@
-# Eventra - Event Management System
+# 🎉 Eventra - Event Management System
 
-## Overview
-Eventra is a comprehensive event management system built with CodeIgniter 4, featuring user authentication, event creation and management, registration system, and administrative controls.
+<div align="center">
+  <img src="https://img.shields.io/badge/PHP-8.1+-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP">
+  <img src="https://img.shields.io/badge/CodeIgniter-4.x-EF4223?style=for-the-badge&logo=codeigniter&logoColor=white" alt="CodeIgniter">
+  <img src="https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
+  <img src="https://img.shields.io/badge/Bootstrap-5.x-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap">
+</div>
 
-## Features
+<div align="center">
+  <h3>🚀 Modern Event Management Platform Built with CodeIgniter 4</h3>
+  <p>Kelola event Anda dengan mudah, aman, dan efisien!</p>
+</div>
 
-### Core Features
-- **User Management**: Registration, authentication, profile management
-- **Event Management**: Create, edit, delete, and manage events
-- **Registration System**: Users can register for events with capacity limits
-- **Admin Dashboard**: Administrative controls and statistics
-- **Security**: CSRF protection, rate limiting, input validation
-- **Caching**: Redis-based caching for improved performance
-- **API**: RESTful API endpoints for mobile/external integration
+---
 
-### Security Features
-- **Rate Limiting**: Different limits for API, authentication, and general requests
-- **CSRF Protection**: Custom CSRF filter with enhanced security
-- **Input Validation**: Custom validation rules for strong passwords, unique fields
-- **Security Headers**: Comprehensive security headers including CSP, HSTS
-- **SQL Injection Protection**: Parameterized queries and input sanitization
+## 📋 Daftar Isi
 
-## Installation
+- [✨ Fitur Utama](#-fitur-utama)
+- [🛠️ Teknologi](#️-teknologi)
+- [📦 Instalasi](#-instalasi)
+- [🔧 Konfigurasi](#-konfigurasi)
+- [🚀 Menjalankan Aplikasi](#-menjalankan-aplikasi)
+- [👥 Akun Default](#-akun-default)
+- [📱 Fitur Aplikasi](#-fitur-aplikasi)
+- [🔒 Keamanan](#-keamanan)
+- [📊 Struktur Database](#-struktur-database)
+- [🤝 Kontribusi](#-kontribusi)
+- [📄 Lisensi](#-lisensi)
 
-### Requirements
-- PHP 8.1 or higher
-- MySQL 5.7+ or MariaDB 10.3+
+---
+
+## ✨ Fitur Utama
+
+### 🎯 **Untuk Organizer Event**
+- 📅 **Manajemen Event Lengkap** - Buat, edit, dan kelola event dengan mudah
+- 👥 **Manajemen Peserta** - Lihat dan kelola pendaftaran peserta
+- 📊 **Dashboard Analytics** - Statistik event dan peserta real-time
+- 🎫 **Sistem Tiket** - Generate dan kelola tiket event
+- 📧 **Notifikasi Email** - Kirim konfirmasi dan reminder otomatis
+
+### 🎪 **Untuk Peserta**
+- 🔍 **Pencarian Event** - Temukan event menarik dengan mudah
+- 📝 **Pendaftaran Online** - Daftar event dengan proses yang simpel
+- 👤 **Profil Pengguna** - Kelola informasi pribadi dan riwayat event
+- 🎟️ **E-Ticket** - Dapatkan tiket digital untuk event
+- ⭐ **Rating & Review** - Berikan feedback untuk event yang diikuti
+
+### 🛡️ **Untuk Administrator**
+- 🔐 **Manajemen User** - Kelola akun pengguna dan hak akses
+- 📈 **Monitoring Sistem** - Pantau performa dan aktivitas aplikasi
+- 🔧 **Konfigurasi Sistem** - Atur pengaturan aplikasi
+- 📋 **Laporan Lengkap** - Generate laporan event dan keuangan
+
+---
+
+## 🛠️ Teknologi
+
+### **Backend**
+- **PHP 8.1+** - Bahasa pemrograman utama
+- **CodeIgniter 4.x** - Framework PHP modern dan ringan
+- **MySQL 8.0+** - Database management system
+- **Composer** - Dependency manager untuk PHP
+
+### **Frontend**
+- **Bootstrap 5.x** - CSS framework untuk UI responsif
+- **jQuery** - JavaScript library untuk interaktivitas
+- **Font Awesome** - Icon library
+- **Chart.js** - Library untuk visualisasi data
+
+### **Security & Performance**
+- **CSRF Protection** - Perlindungan dari serangan CSRF
+- **Rate Limiting** - Pembatasan request untuk mencegah spam
+- **Password Hashing** - Enkripsi password dengan bcrypt
+- **Session Management** - Manajemen sesi yang aman
+- **Input Validation** - Validasi input yang ketat
+
+---
+
+## 📦 Instalasi
+
+### **Prasyarat**
+Pastikan sistem Anda memiliki:
+- PHP 8.1 atau lebih tinggi
+- MySQL 8.0 atau lebih tinggi
 - Composer
-- Redis (optional, for caching)
+- Web server (Apache/Nginx) atau XAMPP/WAMP
 
-### Setup Steps
+### **Langkah Instalasi**
 
-1. **Clone the repository**
+1. **Clone Repository**
    ```bash
-   git clone <repository-url>
-   cd Eventra1
+   git clone https://github.com/username/eventra.git
+   cd eventra
    ```
 
-2. **Install dependencies**
+2. **Install Dependencies**
    ```bash
    composer install
    ```
 
-3. **Environment Configuration**
+3. **Setup Environment**
    ```bash
    cp .env.example .env
-   # Edit .env with your database and other configurations
    ```
 
-4. **Database Setup**
+4. **Konfigurasi Database**
+   Edit file `.env` dan sesuaikan konfigurasi database:
+   ```env
+   database.default.hostname = localhost
+   database.default.database = eventra_db
+   database.default.username = your_username
+   database.default.password = your_password
+   database.default.DBDriver = MySQLi
+   ```
+
+5. **Buat Database**
+   ```sql
+   CREATE DATABASE eventra_db;
+   ```
+
+6. **Jalankan Migration**
    ```bash
    php spark migrate
-   php spark db:seed DatabaseSeeder
    ```
 
-5. **Set Permissions**
+7. **Jalankan Seeder (Opsional)**
    ```bash
-   chmod -R 755 writable/
+   php spark db:seed
    ```
 
-## Configuration
+---
 
-### Environment Variables
-Key environment variables to configure:
+## 🔧 Konfigurasi
+
+### **Environment Variables**
+Sesuaikan konfigurasi di file `.env`:
 
 ```env
-# Database
+# App Configuration
+CI_ENVIRONMENT = development
+app.baseURL = 'http://localhost:8000'
+app.appTimezone = 'Asia/Jakarta'
+
+# Database Configuration
 database.default.hostname = localhost
 database.default.database = eventra_db
-database.default.username = your_username
-database.default.password = your_password
+database.default.username = root
+database.default.password = 
 
-# Cache (Redis)
-cache.handler = redis
-cache.redis.host = 127.0.0.1
-cache.redis.port = 6379
+# Security Configuration
+security.csrfProtection = 'cookie'
+security.tokenRandomize = true
+security.tokenName = 'csrf_token_name'
+security.cookieName = 'csrf_cookie_name'
 
-# Email
-email.protocol = smtp
-email.SMTPHost = your-smtp-host
-email.SMTPUser = your-smtp-user
-email.SMTPPass = your-smtp-password
+# Session Configuration
+session.driver = 'CodeIgniter\Session\Handlers\FileHandler'
+session.cookieName = 'ci_session'
+session.expiration = 7200
 ```
 
-### Security Configuration
-- CSRF protection is enabled by default
-- Rate limiting is configured for different endpoint types
-- Security headers are automatically applied
-- Strong password validation is enforced
+---
 
-## API Documentation
+## 🚀 Menjalankan Aplikasi
 
-### Authentication Endpoints
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/logout` - User logout
-- `POST /api/auth/refresh` - Refresh token
-
-### Event Endpoints
-- `GET /api/events` - List events (with pagination)
-- `GET /api/events/{id}` - Get event details
-- `POST /api/events` - Create event (authenticated)
-- `PUT /api/events/{id}` - Update event (authenticated)
-- `DELETE /api/events/{id}` - Delete event (authenticated)
-
-### Registration Endpoints
-- `POST /api/events/{id}/register` - Register for event
-- `DELETE /api/events/{id}/register` - Cancel registration
-- `GET /api/users/{id}/registrations` - Get user registrations
-
-### Rate Limits
-- **API Endpoints**: 100 requests per hour
-- **Authentication**: 5 requests per 5 minutes
-- **General**: 60 requests per minute
-
-## Database Schema
-
-### Users Table
-- `id` (Primary Key)
-- `username` (Unique)
-- `email` (Unique)
-- `password` (Hashed)
-- `first_name`
-- `last_name`
-- `status` (active/inactive)
-- `created_at`
-- `updated_at`
-
-### Events Table
-- `id` (Primary Key)
-- `user_id` (Foreign Key)
-- `title`
-- `description`
-- `event_date`
-- `location`
-- `capacity`
-- `status` (active/cancelled)
-- `created_at`
-- `updated_at`
-
-### Event Registrations Table
-- `id` (Primary Key)
-- `event_id` (Foreign Key)
-- `user_id` (Foreign Key)
-- `status` (registered/cancelled)
-- `registered_at`
-
-## Validation Rules
-
-### Custom Validation Rules
-- `strong_password`: Requires uppercase, lowercase, number, and special character
-- `unique_email`: Checks email uniqueness (excludes current user on update)
-- `unique_username`: Checks username uniqueness (excludes current user on update)
-- `future_date`: Ensures event dates are in the future
-- `valid_capacity`: Validates event capacity range (1-10000)
-
-## Caching Strategy
-
-### Cache Keys
-- `user_stats`: User statistics (TTL: 1 hour)
-- `event_stats_{id}`: Event statistics (TTL: 30 minutes)
-- `popular_events`: Popular events list (TTL: 1 hour)
-- `rate_limit_{type}_{ip}`: Rate limiting counters
-
-### Cache Invalidation
-- User stats cache is invalidated on user creation/update
-- Event stats cache is invalidated on registration changes
-- Popular events cache is invalidated on new registrations
-
-## Maintenance
-
-### Log Cleanup
-Use the built-in command to clean up old log files:
+### **Development Server**
 ```bash
-php spark logs:cleanup 30  # Clean logs older than 30 days
+php spark serve
+```
+Aplikasi akan berjalan di `http://localhost:8080`
+
+### **Production Server**
+1. Upload semua file ke web server
+2. Arahkan document root ke folder `public/`
+3. Pastikan folder `writable/` memiliki permission 755
+4. Set environment ke `production` di file `.env`
+
+---
+
+## 👥 Akun Default
+
+Setelah menjalankan seeder, Anda dapat login dengan akun berikut:
+
+### **Administrator**
+- **Email:** `admin@example.com`
+- **Password:** `admin123`
+- **Role:** Admin
+
+### **User Demo**
+- **Email:** `user@example.com`
+- **Password:** `user123`
+- **Role:** User
+
+---
+
+## 📱 Fitur Aplikasi
+
+### **Dashboard Admin**
+- 📊 Statistik event dan pengguna
+- 📈 Grafik pendaftaran event
+- 🔔 Notifikasi sistem
+- 📋 Manajemen konten
+
+### **Dashboard User**
+- 🎪 Event yang diikuti
+- 📅 Kalender event
+- 🎫 Koleksi tiket
+- ⭐ Riwayat rating
+
+### **Manajemen Event**
+- ➕ Buat event baru
+- ✏️ Edit informasi event
+- 👥 Kelola peserta
+- 📊 Laporan event
+
+### **Sistem Pendaftaran**
+- 📝 Form pendaftaran dinamis
+- 💳 Integrasi payment gateway
+- 📧 Konfirmasi email otomatis
+- 🎟️ Generate e-ticket
+
+---
+
+## 🔒 Keamanan
+
+Eventra dilengkapi dengan fitur keamanan tingkat enterprise:
+
+- **🛡️ CSRF Protection** - Mencegah serangan Cross-Site Request Forgery
+- **🔐 Password Hashing** - Menggunakan algoritma bcrypt yang aman
+- **🚦 Rate Limiting** - Membatasi request untuk mencegah abuse
+- **✅ Input Validation** - Validasi ketat pada semua input pengguna
+- **🔒 Session Security** - Manajemen sesi yang aman dengan regenerasi token
+- **🚫 SQL Injection Prevention** - Menggunakan prepared statements
+- **🔍 XSS Protection** - Filter output untuk mencegah script injection
+
+---
+
+## 📊 Struktur Database
+
+### **Tabel Utama**
+
+#### **users**
+```sql
+- id (Primary Key)
+- username (Unique)
+- email (Unique)
+- password (Hashed)
+- full_name
+- phone
+- role (admin/user)
+- is_active
+- created_at
+- updated_at
 ```
 
-### Database Optimization
-Run the performance migration to add indexes:
-```bash
-php spark migrate
+#### **events**
+```sql
+- id (Primary Key)
+- user_id (Foreign Key)
+- title
+- description
+- start_date
+- end_date
+- location
+- max_participants
+- price
+- status
+- created_at
+- updated_at
 ```
 
-### Cache Management
-Clear cache when needed:
-```bash
-php spark cache:clear
+#### **event_registrations**
+```sql
+- id (Primary Key)
+- event_id (Foreign Key)
+- user_id (Foreign Key)
+- registration_date
+- status
+- payment_status
+- created_at
+- updated_at
 ```
 
-## Security Best Practices
+---
 
-1. **Regular Updates**: Keep CodeIgniter and dependencies updated
-2. **Environment Files**: Never commit `.env` files to version control
-3. **Database Credentials**: Use strong, unique database passwords
-4. **HTTPS**: Always use HTTPS in production
-5. **Backup**: Regular database and file backups
-6. **Monitoring**: Monitor logs for suspicious activity
+## 🎨 Screenshots
 
-## Troubleshooting
+### Dashboard Admin
+![Admin Dashboard](docs/images/admin-dashboard.png)
 
-### Common Issues
+### Event Management
+![Event Management](docs/images/event-management.png)
 
-1. **Database Connection Error**
-   - Check database credentials in `.env`
-   - Ensure database server is running
-   - Verify database exists
+### User Registration
+![User Registration](docs/images/user-registration.png)
 
-2. **Permission Errors**
-   - Check `writable/` directory permissions
-   - Ensure web server can write to cache and logs
+---
 
-3. **Rate Limiting Issues**
-   - Check Redis connection if using Redis cache
-   - Verify cache configuration
+## 🚀 Roadmap
 
-4. **CSRF Token Errors**
-   - Ensure CSRF tokens are included in forms
-   - Check session configuration
+### **Version 2.0** (Q2 2024)
+- [ ] 📱 Mobile App (React Native)
+- [ ] 💳 Multiple Payment Gateways
+- [ ] 🌐 Multi-language Support
+- [ ] 📊 Advanced Analytics
+- [ ] 🔔 Push Notifications
 
-## Development
+### **Version 2.1** (Q3 2024)
+- [ ] 🎥 Live Streaming Integration
+- [ ] 🤖 AI-powered Event Recommendations
+- [ ] 📱 QR Code Check-in
+- [ ] 💬 Real-time Chat
+- [ ] 🎯 Marketing Automation
 
-### Code Structure
-- `app/Controllers/` - Application controllers
-- `app/Models/` - Database models
-- `app/Services/` - Business logic services
-- `app/Filters/` - Request/response filters
-- `app/Validation/` - Custom validation rules
+---
 
-### Testing
-Run tests with:
-```bash
-vendor/bin/phpunit
-```
+## 🤝 Kontribusi
 
-### Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Make changes with tests
-4. Submit a pull request
+Kami sangat menghargai kontribusi dari komunitas! Berikut cara berkontribusi:
 
-## License
-This project is licensed under the MIT License.
+1. **Fork** repository ini
+2. **Buat branch** untuk fitur baru (`git checkout -b feature/AmazingFeature`)
+3. **Commit** perubahan Anda (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** ke branch (`git push origin feature/AmazingFeature`)
+5. **Buat Pull Request**
 
-## Support
-For support and questions, please create an issue in the repository or contact the development team.
+### **Guidelines Kontribusi**
+- Ikuti coding standards PSR-12
+- Tulis unit tests untuk fitur baru
+- Update dokumentasi jika diperlukan
+- Pastikan semua tests pass
+
+---
+
+## 📞 Support
+
+Butuh bantuan? Hubungi kami melalui:
+
+- 📧 **Email:** support@eventra.com
+- 💬 **Discord:** [Eventra Community](https://discord.gg/eventra)
+- 📖 **Documentation:** [docs.eventra.com](https://docs.eventra.com)
+- 🐛 **Bug Reports:** [GitHub Issues](https://github.com/username/eventra/issues)
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [MIT License](LICENSE) - lihat file LICENSE untuk detail lengkap.
+
+---
+
+## 🙏 Acknowledgments
+
+- **CodeIgniter Team** - Framework yang luar biasa
+- **Bootstrap Team** - UI framework yang powerful
+- **Font Awesome** - Icon library yang comprehensive
+- **Chart.js** - Library visualisasi data yang elegant
+
+---
+
+<div align="center">
+  <h3>⭐ Jika proyek ini membantu Anda, berikan star di GitHub! ⭐</h3>
+  <p>Made with ❤️ by Eventra Team</p>
+  
+  <a href="https://github.com/username/eventra">
+    <img src="https://img.shields.io/github/stars/username/eventra?style=social" alt="GitHub stars">
+  </a>
+  <a href="https://github.com/username/eventra/fork">
+    <img src="https://img.shields.io/github/forks/username/eventra?style=social" alt="GitHub forks">
+  </a>
+</div>
+
+---
+
+**© 2024 Eventra. All rights reserved.**
