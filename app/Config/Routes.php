@@ -59,7 +59,10 @@ $routes->group('user', function($routes) {
     $routes->get('certificates', 'User\CertificateController::index');
     $routes->get('certificates/view/(:num)', 'User\CertificateController::view/$1');
     $routes->get('certificates/download/(:num)', 'User\CertificateController::download/$1');
+    $routes->get('certificates/verify', 'User\CertificateController::verify');
+    $routes->post('certificates/verify', 'User\CertificateController::verify');
 });
 
 // Public certificate verification
 $routes->get('verify-certificate', 'UserController::verifyCertificate');
+$routes->post('verify-certificate', 'UserController::verifyCertificate');

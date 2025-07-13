@@ -342,17 +342,37 @@ class UserController extends BaseController
 
     public function verifyCertificate()
     {
-        $code = $this->request->getGet('code');
+        // Handle both GET and POST requests
+        $code = $this->request->getGet('code') ?: $this->request->getPost('certificate_code');
         
         if (!$code) {
             $data = [
                 'title' => 'Verifikasi Sertifikat - Eventra',
                 'certificate' => null
             ];
-            return view('user/certificates/verify', $data);
+            return view('verify_certificate', $data);
         }
 
-        $certificate = $this->registrationModel->getRegistrationByCertificateCode($code);
+        // Search for certificate by code
+        $certificate = $this->registrationModel
+            ->select('event_registrations.*, 
+                     events.title as event_title, 
+                     events.start_date as event_start_date, 
+                     events.end_date as event_end_date, 
+                     events.speaker as event_speaker, 
+                     events.type as event_type, 
+                     users.full_name as user_name')
+            ->join('events', 'events.id = event_registrations.event_id')
+            ->join('users', 'users.id = event_registrations.user_id')
+            ->where('event_registrations.certificate_code', $code)
+            ->where('event_registrations.status', 'attended')
+            ->first();
+
+        if (!$certificate && $this->request->getMethod() === 'post') {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Kode sertifikat tidak ditemukan atau tidak valid. Pastikan kode yang Anda masukkan benar.');
+        }
 
         $data = [
             'title' => 'Verifikasi Sertifikat - Eventra',
@@ -360,6 +380,6 @@ class UserController extends BaseController
             'code' => $code
         ];
 
-        return view('user/certificates/verify', $data);
+        return view('verify_certificate', $data);
     }
 }

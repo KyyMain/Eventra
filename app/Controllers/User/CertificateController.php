@@ -159,6 +159,49 @@ class CertificateController extends BaseController
         return $this->view($registrationId);
     }
 
+    public function verify()
+    {
+        $certificateCode = $this->request->getPost('certificate_code');
+        
+        if (!$certificateCode) {
+            // If no code provided, show the verification form
+            $data = [
+                'title' => 'Verifikasi Sertifikat',
+                'certificate' => null
+            ];
+            return view('user/certificates/verify', $data);
+        }
+
+        // Search for certificate by code
+        $certificate = $this->registrationModel
+            ->select('event_registrations.*, 
+                     events.title as event_title, 
+                     events.start_date as event_start_date, 
+                     events.end_date as event_end_date, 
+                     events.speaker as event_speaker, 
+                     events.type as event_type, 
+                     users.full_name as user_name')
+            ->join('events', 'events.id = event_registrations.event_id')
+            ->join('users', 'users.id = event_registrations.user_id')
+            ->where('event_registrations.certificate_code', $certificateCode)
+            ->where('event_registrations.status', 'attended')
+            ->first();
+
+        if (!$certificate) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Kode sertifikat tidak ditemukan atau tidak valid. Pastikan kode yang Anda masukkan benar.');
+        }
+
+        $data = [
+            'title' => 'Verifikasi Sertifikat',
+            'certificate' => $certificate,
+            'code' => $certificateCode
+        ];
+
+        return view('user/certificates/verify', $data);
+    }
+
     private function generateCertificateCode($registrationId, $eventId)
     {
         // Generate a unique certificate code
