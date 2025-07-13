@@ -44,7 +44,7 @@ class AdminController extends BaseController
 
             $recentEvents = $this->eventModel->orderBy('created_at', 'DESC')->limit(5)->findAll();
             $recentRegistrations = $this->registrationModel
-                ->select('event_registrations.*, events.title, users.full_name')
+                ->select('event_registrations.*, events.title as event_title, users.full_name')
                 ->join('events', 'events.id = event_registrations.event_id')
                 ->join('users', 'users.id = event_registrations.user_id')
                 ->orderBy('event_registrations.created_at', 'DESC')
@@ -476,8 +476,23 @@ class AdminController extends BaseController
         if ($status) $updateData['status'] = $status;
         if ($paymentStatus) $updateData['payment_status'] = $paymentStatus;
 
+        // If status is changed to "attended", automatically issue certificate
+        if ($status === 'attended') {
+            $updateData['certificate_issued'] = true;
+            
+            // Generate certificate code if not exists
+            $registration = $this->registrationModel->find($registrationId);
+            if (empty($registration['certificate_code'])) {
+                $updateData['certificate_code'] = 'CERT-' . strtoupper(uniqid());
+            }
+        }
+
         if ($this->registrationModel->update($registrationId, $updateData)) {
-            return redirect()->back()->with('success', 'Status pendaftaran berhasil diupdate.');
+            $message = 'Status pendaftaran berhasil diupdate.';
+            if ($status === 'attended') {
+                $message .= ' Sertifikat telah diterbitkan secara otomatis.';
+            }
+            return redirect()->back()->with('success', $message);
         } else {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat update status.');
         }

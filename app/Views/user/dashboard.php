@@ -132,7 +132,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <?php foreach ($upcoming_events as $event): ?>
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                        <?php if ($event['image']): ?>
+                        <?php if (isset($event['image']) && $event['image']): ?>
                             <img src="/uploads/events/<?= $event['image'] ?>" alt="<?= esc($event['title']) ?>" class="w-full h-48 object-cover">
                         <?php else: ?>
                             <div class="w-full h-48 bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
@@ -221,7 +221,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-10 w-10">
-                                                <?php if ($registration['event_image']): ?>
+                                                <?php if (isset($registration['event_image']) && $registration['event_image']): ?>
                                                     <img class="h-10 w-10 rounded-lg object-cover" src="/uploads/events/<?= $registration['event_image'] ?>" alt="">
                                                 <?php else: ?>
                                                     <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center">

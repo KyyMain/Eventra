@@ -49,8 +49,10 @@ $routes->group('user', function($routes) {
     $routes->get('dashboard', 'UserController::dashboard');
     $routes->get('events', 'UserController::events');
     $routes->get('events/detail/(:num)', 'UserController::eventDetail/$1');
+    $routes->get('events/(:num)', 'UserController::eventDetail/$1'); // Alternative route for compatibility
     $routes->post('events/register/(:num)', 'UserController::registerEvent/$1');
-    $routes->post('events/cancel/(:num)', 'UserController::cancelRegistration/$1');
+    $routes->post('registrations/cancel/(:num)', 'UserController::cancelRegistration/$1');
+    $routes->get('registrations/cancel/(:num)', 'UserController::cancelRegistration/$1'); // Add GET method for testing
     $routes->get('my-events', 'UserController::myEvents');
     
     // Certificate routes

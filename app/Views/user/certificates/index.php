@@ -33,7 +33,7 @@
                                     <i class="fas fa-certificate text-2xl"></i>
                                 </div>
                                 <span class="bg-white bg-opacity-20 text-white text-xs px-2 py-1 rounded-full">
-                                    <?= ucfirst($cert['type']) ?>
+                                    <?= ucfirst($cert['event_type']) ?>
                                 </span>
                             </div>
                         </div>
@@ -41,23 +41,23 @@
                         <!-- Certificate Content -->
                         <div class="p-6">
                             <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                                <?= esc($cert['title']) ?>
+                                <?= esc($cert['event_title']) ?>
                             </h3>
                             
                             <div class="space-y-2 text-sm text-gray-600 mb-4">
                                 <div class="flex items-center">
                                     <i class="fas fa-calendar w-4 mr-2"></i>
                                     <span>
-                                        <?= date('d M Y', strtotime($cert['start_date'])) ?>
-                                        <?php if ($cert['end_date'] && $cert['end_date'] !== $cert['start_date']): ?>
-                                            - <?= date('d M Y', strtotime($cert['end_date'])) ?>
+                                        <?= date('d M Y', strtotime($cert['event_start_date'])) ?>
+                                        <?php if ($cert['event_end_date'] && $cert['event_end_date'] !== $cert['event_start_date']): ?>
+                                            - <?= date('d M Y', strtotime($cert['event_end_date'])) ?>
                                         <?php endif; ?>
                                     </span>
                                 </div>
                                 
                                 <div class="flex items-center">
                                     <i class="fas fa-user-tie w-4 mr-2"></i>
-                                    <span><?= esc($cert['speaker']) ?></span>
+                                    <span><?= esc($cert['event_speaker']) ?></span>
                                 </div>
                                 
                                 <div class="flex items-center">

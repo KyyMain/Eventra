@@ -66,7 +66,7 @@
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
                     <!-- Event Image -->
                     <div class="relative">
-                        <?php if ($event['image']): ?>
+                        <?php if (isset($event['image']) && $event['image']): ?>
                             <img src="/uploads/events/<?= $event['image'] ?>" alt="<?= esc($event['title']) ?>" class="w-full h-48 object-cover">
                         <?php else: ?>
                             <div class="w-full h-48 bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">

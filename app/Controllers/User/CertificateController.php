@@ -28,7 +28,12 @@ class CertificateController extends BaseController
         
         // Get user's certificates (registrations with attended status)
         $certificates = $this->registrationModel
-            ->select('event_registrations.*, events.title, events.start_date, events.end_date, events.speaker, events.type')
+            ->select('event_registrations.*, 
+                     events.title as event_title, 
+                     events.start_date as event_start_date, 
+                     events.end_date as event_end_date, 
+                     events.speaker as event_speaker, 
+                     events.type as event_type')
             ->join('events', 'events.id = event_registrations.event_id')
             ->where('event_registrations.user_id', $userId)
             ->orderBy('event_registrations.created_at', 'DESC')
@@ -66,7 +71,14 @@ class CertificateController extends BaseController
         
         // Get registration details
         $registration = $this->registrationModel
-            ->select('event_registrations.*, events.title, events.start_date, events.end_date, events.speaker, events.type, events.description, users.full_name')
+            ->select('event_registrations.*, 
+                     events.title as event_title, 
+                     events.start_date as event_start_date, 
+                     events.end_date as event_end_date, 
+                     events.speaker as event_speaker, 
+                     events.type as event_type, 
+                     events.description as event_description, 
+                     users.full_name')
             ->join('events', 'events.id = event_registrations.event_id')
             ->join('users', 'users.id = event_registrations.user_id')
             ->where('event_registrations.id', $registrationId)
@@ -93,7 +105,7 @@ class CertificateController extends BaseController
         }
 
         $data = [
-            'title' => 'Sertifikat - ' . $registration['title'],
+            'title' => 'Sertifikat - ' . $registration['event_title'],
             'registration' => $registration
         ];
 
@@ -111,7 +123,13 @@ class CertificateController extends BaseController
         
         // Get registration details
         $registration = $this->registrationModel
-            ->select('event_registrations.*, events.title, events.start_date, events.end_date, events.speaker, events.type, users.full_name')
+            ->select('event_registrations.*, 
+                     events.title as event_title, 
+                     events.start_date as event_start_date, 
+                     events.end_date as event_end_date, 
+                     events.speaker as event_speaker, 
+                     events.type as event_type, 
+                     users.full_name')
             ->join('events', 'events.id = event_registrations.event_id')
             ->join('users', 'users.id = event_registrations.user_id')
             ->where('event_registrations.id', $registrationId)

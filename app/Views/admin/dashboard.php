@@ -186,7 +186,7 @@
                                 <div class="flex items-center justify-between">
                                     <div class="flex-1">
                                         <h4 class="text-sm font-medium text-gray-900 mb-1"><?= esc($registration['full_name']) ?></h4>
-                                        <p class="text-sm text-gray-600 mb-2"><?= esc($registration['title']) ?></p>
+                                        <p class="text-sm text-gray-600 mb-2"><?= esc($registration['event_title']) ?></p>
                                         <div class="flex items-center space-x-2">
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-<?= $registration['status'] === 'registered' ? 'blue' : ($registration['status'] === 'attended' ? 'green' : 'red') ?>-100 text-<?= $registration['status'] === 'registered' ? 'blue' : ($registration['status'] === 'attended' ? 'green' : 'red') ?>-800">
                                                 <?= ucfirst($registration['status']) ?>

@@ -73,7 +73,7 @@ class Filters extends BaseFilters
         'before' => [
             'honeypot',
             'invalidchars',
-            'csrf',  // Use built-in CSRF filter instead of custom one
+            'csrf',  // Re-enable CSRF
             'ratelimit',
         ],
         'after' => [

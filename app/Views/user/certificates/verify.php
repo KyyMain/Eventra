@@ -124,7 +124,7 @@
                                 <i class="fas fa-clock w-5 mr-3 mt-1"></i>
                                 <div>
                                     <p class="font-medium">Tanggal Event</p>
-                                    <p class="opacity-90"><?= date('d F Y', strtotime($certificate['event_date'])) ?></p>
+                                    <p class="opacity-90"><?= date('d F Y', strtotime($certificate['event_start_date'])) ?></p>
                                 </div>
                             </div>
                         </div>

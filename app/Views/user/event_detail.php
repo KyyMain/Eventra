@@ -12,7 +12,7 @@
 
     <!-- Event Header -->
     <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-        <?php if ($event['image']): ?>
+        <?php if (isset($event['image']) && $event['image']): ?>
             <img src="/uploads/events/<?= $event['image'] ?>" alt="<?= esc($event['title']) ?>" class="w-full h-64 object-cover">
         <?php else: ?>
             <div class="w-full h-64 bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
@@ -122,7 +122,7 @@
     <div class="bg-white rounded-lg shadow-lg p-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-6">Registrasi</h2>
         
-        <?php if ($is_registered): ?>
+        <?php if ($isRegistered): ?>
             <!-- Already Registered -->
             <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
                 <div class="flex items-center">
@@ -139,13 +139,12 @@
                     Lihat Event Saya
                 </a>
                 
-                <?php if (strtotime($event['start_date']) > time()): ?>
-                    <form action="/user/events/cancel/<?= $event['id'] ?>" method="post" class="flex-1" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan registrasi?')">
-                        <?= csrf_field() ?>
+                <?php if (strtotime($event['start_date']) > time() && $userRegistration): ?>
+                    <?= form_open('user/registrations/cancel/' . $userRegistration['id'], ['class' => 'flex-1', 'onsubmit' => "return confirm('Apakah Anda yakin ingin membatalkan registrasi?')"]) ?>
                         <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg font-medium transition duration-200">
                             Batalkan Registrasi
                         </button>
-                    </form>
+                    <?= form_close() ?>
                 <?php endif; ?>
             </div>
         <?php else: ?>

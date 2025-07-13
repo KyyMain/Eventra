@@ -50,8 +50,8 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-12 w-12">
-                                                <?php if ($event['image']): ?>
-                                                    <img class="h-12 w-12 rounded-lg object-cover border border-gray-200" src="/uploads/events/<?= $event['image'] ?>" alt="Event image">
+                                                <?php if (isset($event['image']) && $event['image']): ?>
+                                    <img class="h-12 w-12 rounded-lg object-cover border border-gray-200" src="/uploads/events/<?= $event['image'] ?>" alt="Event image">
                                                 <?php else: ?>
                                                     <div class="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center border border-gray-200">
                                                         <i class="fas fa-calendar text-blue-600"></i>

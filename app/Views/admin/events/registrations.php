@@ -42,6 +42,27 @@
         </div>
     </div>
 
+    <!-- Certificate Info -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <i class="fas fa-info-circle text-blue-400 text-xl"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-blue-800">Cara Membuat Sertifikat</h3>
+                <div class="mt-2 text-sm text-blue-700">
+                    <p>Untuk membuat sertifikat peserta:</p>
+                    <ol class="list-decimal list-inside mt-1 space-y-1">
+                        <li>Ubah status peserta menjadi <strong>"Attended"</strong> pada kolom Status</li>
+                        <li>Sertifikat akan otomatis diterbitkan dengan kode unik</li>
+                        <li>Peserta dapat mengunduh sertifikat melalui dashboard mereka</li>
+                        <li>Admin dapat melihat dan mengunduh sertifikat melalui tombol aksi</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Registrations Table -->
     <div class="bg-white shadow overflow-hidden sm:rounded-md">
         <div class="px-4 py-5 sm:px-6">
@@ -64,6 +85,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Daftar</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pembayaran</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sertifikat</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
@@ -94,10 +116,12 @@
                                     <form method="POST" action="/admin/registrations/update-status/<?= $registration['id'] ?>" class="inline">
                                         <?= csrf_field() ?>
                                         <select name="status" onchange="this.form.submit()" class="text-xs rounded-full px-2 py-1 border-0
-                                            <?= $registration['status'] === 'confirmed' ? 'bg-green-100 text-green-800' : 
-                                                ($registration['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') ?>">
+                                            <?= $registration['status'] === 'attended' ? 'bg-blue-100 text-blue-800' : 
+                                                ($registration['status'] === 'confirmed' ? 'bg-green-100 text-green-800' : 
+                                                ($registration['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800')) ?>">
                                             <option value="pending" <?= $registration['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
                                             <option value="confirmed" <?= $registration['status'] === 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
+                                            <option value="attended" <?= $registration['status'] === 'attended' ? 'selected' : '' ?>>Attended</option>
                                             <option value="cancelled" <?= $registration['status'] === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
                                         </select>
                                     </form>
@@ -114,13 +138,47 @@
                                         </select>
                                     </form>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <?php if ($registration['status'] === 'attended' && $registration['certificate_issued']): ?>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <i class="fas fa-check-circle mr-1"></i>
+                                            Diterbitkan
+                                        </span>
+                                        <div class="text-xs text-gray-500 mt-1">
+                                            <?= esc($registration['certificate_code']) ?>
+                                        </div>
+                                    <?php elseif ($registration['status'] === 'attended'): ?>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            <i class="fas fa-clock mr-1"></i>
+                                            Menunggu
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            <i class="fas fa-minus mr-1"></i>
+                                            Belum Tersedia
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                    <button class="text-indigo-600 hover:text-indigo-900 mr-3" title="Lihat Detail">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button class="text-green-600 hover:text-green-900 mr-3">
-                                        <i class="fas fa-certificate"></i>
-                                    </button>
+                                    <?php if ($registration['status'] === 'attended'): ?>
+                                        <a href="/user/certificates/view/<?= $registration['id'] ?>" 
+                                           class="text-green-600 hover:text-green-900 mr-3" 
+                                           title="Lihat Sertifikat" target="_blank">
+                                            <i class="fas fa-certificate"></i>
+                                        </a>
+                                        <a href="/user/certificates/download/<?= $registration['id'] ?>" 
+                                           class="text-blue-600 hover:text-blue-900 mr-3" 
+                                           title="Download Sertifikat" target="_blank">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="text-gray-400 mr-3" title="Sertifikat belum tersedia">
+                                            <i class="fas fa-certificate"></i>
+                                        </span>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

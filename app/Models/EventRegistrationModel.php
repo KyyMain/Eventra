@@ -70,7 +70,16 @@ class EventRegistrationModel extends Model
 
     public function getUserRegistrations($userId)
     {
-        return $this->select('event_registrations.*, events.title, events.type, events.start_date, events.end_date, events.location, events.speaker')
+        return $this->select('event_registrations.*, 
+                             events.title as event_title, 
+                             events.type as event_type, 
+                             events.start_date as event_start_date, 
+                             events.end_date as event_end_date, 
+                             events.location as event_location, 
+                             events.speaker as event_speaker,
+                             events.description as event_description,
+                             events.price as event_price,
+                             events.image as event_image')
                     ->join('events', 'events.id = event_registrations.event_id')
                     ->where('event_registrations.user_id', $userId)
                     ->orderBy('event_registrations.registration_date', 'DESC')
@@ -79,7 +88,7 @@ class EventRegistrationModel extends Model
 
     public function getEventRegistrations($eventId)
     {
-        return $this->select('event_registrations.*, users.full_name, users.email, users.phone')
+        return $this->select('event_registrations.*, users.full_name, users.email, users.phone, users.username')
                     ->join('users', 'users.id = event_registrations.user_id')
                     ->where('event_registrations.event_id', $eventId)
                     ->orderBy('event_registrations.registration_date', 'ASC')
@@ -87,6 +96,16 @@ class EventRegistrationModel extends Model
     }
 
     public function isUserRegistered($eventId, $userId)
+    {
+        $registration = $this->where('event_id', $eventId)
+                    ->where('user_id', $userId)
+                    ->first();
+        
+        // Return true only if user has an active registration (not cancelled)
+        return $registration !== null && $registration['status'] !== 'cancelled';
+    }
+
+    public function hasActiveRegistration($eventId, $userId)
     {
         return $this->where('event_id', $eventId)
                     ->where('user_id', $userId)
@@ -115,7 +134,14 @@ class EventRegistrationModel extends Model
 
     public function getAttendedRegistrations($userId)
     {
-        return $this->select('event_registrations.*, events.title, events.type, events.start_date, events.end_date')
+        return $this->select('event_registrations.*, 
+                             events.title as event_title, 
+                             events.type as event_type, 
+                             events.start_date as event_start_date, 
+                             events.end_date as event_end_date,
+                             events.speaker as event_speaker,
+                             events.description as event_description,
+                             events.location as event_location')
                     ->join('events', 'events.id = event_registrations.event_id')
                     ->where('event_registrations.user_id', $userId)
                     ->where('event_registrations.status', 'attended')
@@ -132,7 +158,13 @@ class EventRegistrationModel extends Model
 
     public function getRegistrationByCertificateCode($code)
     {
-        return $this->select('event_registrations.*, events.title, events.type, events.start_date, events.end_date, events.speaker, users.full_name')
+        return $this->select('event_registrations.*, 
+                             events.title as event_title, 
+                             events.type as event_type, 
+                             events.start_date as event_start_date, 
+                             events.end_date as event_end_date, 
+                             events.speaker as event_speaker, 
+                             users.full_name as user_name')
                     ->join('events', 'events.id = event_registrations.event_id')
                     ->join('users', 'users.id = event_registrations.user_id')
                     ->where('event_registrations.certificate_code', $code)

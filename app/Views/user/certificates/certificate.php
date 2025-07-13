@@ -42,21 +42,21 @@
                     <p class="text-lg text-gray-700">telah mengikuti dan menyelesaikan</p>
 
                     <div class="bg-gray-50 rounded-lg p-6 my-6">
-                        <h4 class="text-xl font-bold text-gray-900 mb-2"><?= esc($registration['title']) ?></h4>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2"><?= esc($registration['event_title']) ?></h4>
                         <p class="text-gray-600 mb-2">
                             <i class="fas fa-calendar mr-2"></i>
-                            <?= date('d F Y', strtotime($registration['start_date'])) ?>
-                            <?php if ($registration['end_date'] && $registration['end_date'] !== $registration['start_date']): ?>
-                                - <?= date('d F Y', strtotime($registration['end_date'])) ?>
+                            <?= date('d F Y', strtotime($registration['event_start_date'])) ?>
+                            <?php if ($registration['event_end_date'] && $registration['event_end_date'] !== $registration['event_start_date']): ?>
+                                - <?= date('d F Y', strtotime($registration['event_end_date'])) ?>
                             <?php endif; ?>
                         </p>
                         <p class="text-gray-600 mb-2">
                             <i class="fas fa-user-tie mr-2"></i>
-                            Pembicara: <?= esc($registration['speaker']) ?>
+                            Pembicara: <?= esc($registration['event_speaker']) ?>
                         </p>
                         <p class="text-gray-600">
                             <i class="fas fa-tag mr-2"></i>
-                            <?= ucfirst($registration['type']) ?>
+                            <?= ucfirst($registration['event_type']) ?>
                         </p>
                     </div>
 

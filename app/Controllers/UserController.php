@@ -45,7 +45,8 @@ class UserController extends BaseController
                 return $reg['status'] === 'attended';
             })),
             'upcoming_events' => count(array_filter($userRegistrations, function($reg) {
-                return $reg['status'] === 'registered' && strtotime($reg['start_date']) > time();
+                $eventStartDate = $reg['event_start_date'] ?? null;
+                return $reg['status'] === 'registered' && $eventStartDate && strtotime($eventStartDate) > time();
             })),
             'certificates_earned' => count(array_filter($userRegistrations, function($reg) {
                 return $reg['certificate_issued'] == 1;
@@ -144,13 +145,32 @@ class UserController extends BaseController
             return redirect()->back()->with('error', 'Event sudah penuh.');
         }
 
-        // Check if user already registered
-        if ($this->registrationModel->isUserRegistered($eventId, $userId)) {
-            return redirect()->back()->with('error', 'Anda sudah terdaftar untuk event ini.');
+        // Check if user already registered (including cancelled registrations)
+        $existingRegistration = $this->registrationModel->getUserRegistration($eventId, $userId);
+        if ($existingRegistration) {
+            if ($existingRegistration['status'] === 'cancelled') {
+                // Reactivate cancelled registration instead of creating new one
+                $updateData = [
+                    'status' => 'registered',
+                    'payment_status' => $event['price'] > 0 ? 'pending' : 'paid',
+                    'registration_date' => date('Y-m-d H:i:s')
+                ];
+                
+                if ($this->registrationModel->update($existingRegistration['id'], $updateData)) {
+                    // Increment participant count
+                    $this->eventModel->incrementParticipants($eventId);
+                    return redirect()->back()->with('success', 'Berhasil mendaftar event! Silakan lakukan pembayaran jika diperlukan.');
+                } else {
+                    return redirect()->back()->with('error', 'Terjadi kesalahan saat mendaftar event.');
+                }
+            } else {
+                return redirect()->back()->with('error', 'Anda sudah terdaftar untuk event ini.');
+            }
         }
 
-        // Check if event has started
-        if (strtotime($event['start_date']) <= time()) {
+        // Check if event has started - use correct field name
+        $startDate = isset($event['start_date']) ? $event['start_date'] : $event['event_start_date'] ?? null;
+        if ($startDate && strtotime($startDate) <= time()) {
             return redirect()->back()->with('error', 'Pendaftaran sudah ditutup.');
         }
 
@@ -161,41 +181,73 @@ class UserController extends BaseController
             'payment_status' => $event['price'] > 0 ? 'pending' : 'paid'
         ];
 
-        if ($this->registrationModel->insert($registrationData)) {
-            // Increment participant count
-            $this->eventModel->incrementParticipants($eventId);
+        try {
+            if ($this->registrationModel->insert($registrationData)) {
+                // Increment participant count
+                $this->eventModel->incrementParticipants($eventId);
+                
+                return redirect()->back()->with('success', 'Berhasil mendaftar event! Silakan lakukan pembayaran jika diperlukan.');
+            } else {
+                return redirect()->back()->with('error', 'Terjadi kesalahan saat mendaftar event.');
+            }
+        } catch (\Exception $e) {
+            // Handle duplicate entry error specifically
+            if (strpos($e->getMessage(), 'Duplicate entry') !== false && strpos($e->getMessage(), 'event_id_user_id') !== false) {
+                return redirect()->back()->with('error', 'Anda sudah terdaftar untuk event ini.');
+            }
             
-            return redirect()->back()->with('success', 'Berhasil mendaftar event! Silakan lakukan pembayaran jika diperlukan.');
-        } else {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mendaftar event.');
+            // Log the error for debugging
+            log_message('error', 'Event registration error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mendaftar event. Silakan coba lagi.');
         }
     }
 
     public function cancelRegistration($registrationId)
     {
+        // Enhanced debug logging
+        log_message('info', 'Cancel registration called with ID: ' . $registrationId);
+        log_message('info', 'Request method: ' . $this->request->getMethod());
+        log_message('info', 'Request URI: ' . $this->request->getUri());
+        log_message('info', 'POST data: ' . json_encode($this->request->getPost()));
+        
         $authCheck = $this->checkUserAuth();
         if ($authCheck) return $authCheck;
 
         $userId = session()->get('user_id');
+        log_message('info', 'User ID: ' . $userId);
+        
         $registration = $this->registrationModel->find($registrationId);
+        log_message('info', 'Registration found: ' . ($registration ? 'Yes' : 'No'));
         
         if (!$registration || $registration['user_id'] != $userId) {
+            log_message('error', 'Registration not found or user mismatch');
             return redirect()->to('/user/my-events')->with('error', 'Pendaftaran tidak ditemukan.');
+        }
+
+        // Check if already cancelled
+        if ($registration['status'] === 'cancelled') {
+            return redirect()->back()->with('error', 'Pendaftaran sudah dibatalkan sebelumnya.');
         }
 
         $event = $this->eventModel->find($registration['event_id']);
         
-        // Check if event has started
-        if (strtotime($event['start_date']) <= time()) {
+        // Check if event has started - use correct field name
+        $startDate = isset($event['start_date']) ? $event['start_date'] : $event['event_start_date'] ?? null;
+        if ($startDate && strtotime($startDate) <= time()) {
             return redirect()->back()->with('error', 'Tidak dapat membatalkan pendaftaran setelah event dimulai.');
         }
 
+        // Update status to cancelled instead of deleting
         if ($this->registrationModel->update($registrationId, ['status' => 'cancelled'])) {
-            // Decrement participant count
-            $this->eventModel->decrementParticipants($registration['event_id']);
+            // Decrement participant count only if status was 'registered'
+            if ($registration['status'] === 'registered') {
+                $this->eventModel->decrementParticipants($registration['event_id']);
+            }
             
+            log_message('info', 'Registration cancelled successfully');
             return redirect()->back()->with('success', 'Pendaftaran berhasil dibatalkan.');
         } else {
+            log_message('error', 'Failed to update registration status');
             return redirect()->back()->with('error', 'Terjadi kesalahan saat membatalkan pendaftaran.');
         }
     }
@@ -206,7 +258,26 @@ class UserController extends BaseController
         if ($authCheck) return $authCheck;
 
         $userId = session()->get('user_id');
+        $status = $this->request->getGet('status');
+        
+        // Get all registrations first
         $registrations = $this->registrationModel->getUserRegistrations($userId);
+        
+        // Filter based on status if provided
+        if ($status && $status !== 'all') {
+            $registrations = array_filter($registrations, function($registration) use ($status) {
+                switch ($status) {
+                    case 'upcoming':
+                        return $registration['status'] === 'registered' && strtotime($registration['event_start_date']) > time();
+                    case 'attended':
+                        return $registration['status'] === 'attended';
+                    case 'cancelled':
+                        return $registration['status'] === 'cancelled';
+                    default:
+                        return true;
+                }
+            });
+        }
 
         $data = [
             'title' => 'Event Saya - Eventra',
@@ -226,7 +297,7 @@ class UserController extends BaseController
 
         $data = [
             'title' => 'Sertifikat Saya - Eventra',
-            'attendedEvents' => $attendedEvents
+            'certificates' => $attendedEvents
         ];
 
         return view('user/certificates', $data);
@@ -239,7 +310,13 @@ class UserController extends BaseController
 
         $userId = session()->get('user_id');
         $registration = $this->registrationModel
-            ->select('event_registrations.*, events.title, events.type, events.start_date, events.end_date, events.speaker, users.full_name')
+            ->select('event_registrations.*, 
+                     events.title as event_title, 
+                     events.type as event_type, 
+                     events.start_date as event_start_date, 
+                     events.end_date as event_end_date, 
+                     events.speaker as event_speaker, 
+                     users.full_name')
             ->join('events', 'events.id = event_registrations.event_id')
             ->join('users', 'users.id = event_registrations.user_id')
             ->where('event_registrations.id', $registrationId)

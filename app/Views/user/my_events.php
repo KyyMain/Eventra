@@ -45,7 +45,7 @@
                     <div class="md:flex">
                         <!-- Event Image -->
                         <div class="md:w-1/3">
-                            <?php if ($registration['event_image']): ?>
+                            <?php if (isset($registration['event_image']) && $registration['event_image']): ?>
                                 <img src="/uploads/events/<?= $registration['event_image'] ?>" alt="<?= esc($registration['event_title']) ?>" class="w-full h-48 md:h-full object-cover">
                             <?php else: ?>
                                 <div class="w-full h-48 md:h-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
@@ -125,13 +125,18 @@
                                     <?php endif; ?>
                                 </div>
                                 
-                                <?php if ($registration['status'] === 'registered' && strtotime($registration['event_start_date']) > time()): ?>
-                                    <form action="/user/events/cancel/<?= $registration['event_id'] ?>" method="post" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan registrasi?')">
-                                        <?= csrf_field() ?>
-                                        <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
-                                            <i class="fas fa-times mr-1"></i>Batalkan
-                                        </button>
-                                    </form>
+                                <?php if ($registration['status'] === 'registered'): ?>
+                                    <?php if (strtotime($registration['event_start_date']) > time()): ?>
+                                        <?= form_open('user/registrations/cancel/' . $registration['id'], ['class' => 'inline', 'onsubmit' => "return confirm('Apakah Anda yakin ingin membatalkan registrasi?')"]) ?>
+                                            <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
+                                                <i class="fas fa-times mr-1"></i>Batalkan
+                                            </button>
+                                        <?= form_close() ?>
+                                    <?php else: ?>
+                                        <span class="text-gray-400 font-medium cursor-not-allowed" title="Event sudah dimulai, tidak dapat dibatalkan">
+                                            <i class="fas fa-times mr-1"></i>Tidak dapat dibatalkan
+                                        </span>
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             </div>
                         </div>
