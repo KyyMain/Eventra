@@ -333,17 +333,6 @@ Kami sangat menghargai kontribusi dari komunitas! Berikut cara berkontribusi:
 
 ---
 
-## 📞 Support
-
-Butuh bantuan? Hubungi kami melalui:
-
-- 📧 **Email:** support@eventra.com
-- 💬 **Discord:** [Eventra Community](https://discord.gg/eventra)
-- 📖 **Documentation:** [docs.eventra.com](https://docs.eventra.com)
-- 🐛 **Bug Reports:** [GitHub Issues](https://github.com/username/eventra/issues)
-
----
-
 ## 📄 Lisensi
 
 Proyek ini dilisensikan di bawah [MIT License](LICENSE) - lihat file LICENSE untuk detail lengkap.
@@ -361,7 +350,7 @@ Proyek ini dilisensikan di bawah [MIT License](LICENSE) - lihat file LICENSE unt
 
 <div align="center">
   <h3>⭐ Jika proyek ini membantu Anda, berikan star di GitHub! ⭐</h3>
-  <p>Made with ❤️ by Eventra Team</p>
+  <p>Made with ❤️ by Kyy</p>
   
   <a href="https://github.com/username/eventra">
     <img src="https://img.shields.io/github/stars/username/eventra?style=social" alt="GitHub stars">
