@@ -106,23 +106,6 @@
             </div>
         </form>
 
-        <!-- Demo Accounts Info -->
-        <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 text-white">
-            <h3 class="text-lg font-semibold mb-3 text-center">Demo Accounts</h3>
-            <div class="space-y-2 text-sm">
-                <div class="bg-white bg-opacity-20 rounded-lg p-3">
-                    <p class="font-medium">Admin:</p>
-                    <p>Email: admin@eventra.com</p>
-                    <p>Password: admin123</p>
-                </div>
-                <div class="bg-white bg-opacity-20 rounded-lg p-3">
-                    <p class="font-medium">User:</p>
-                    <p>Email: user1@example.com</p>
-                    <p>Password: user123</p>
-                </div>
-            </div>
-        </div>
-
         <!-- Certificate Verification Link -->
         <div class="text-center">
             <a href="/verify-certificate" class="text-indigo-100 hover:text-white text-sm underline">

@@ -22,18 +22,34 @@ class SecurityHeadersFilter implements FilterInterface
         $response->setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
         
-        // Content Security Policy
-        $csp = [
-            "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com",
-            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com",
-            "font-src 'self' https://fonts.gstatic.com",
-            "img-src 'self' data: https:",
-            "connect-src 'self'",
-            "frame-ancestors 'none'",
-            "base-uri 'self'",
-            "form-action 'self'"
-        ];
+        // Environment-specific Content Security Policy
+        if (ENVIRONMENT === 'development') {
+            // More lenient CSP for development
+            $csp = [
+                "default-src 'self'",
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http:",
+                "style-src 'self' 'unsafe-inline' https: http:",
+                "font-src 'self' https: http: data:",
+                "img-src 'self' data: https: http:",
+                "connect-src 'self' https: http:",
+                "frame-ancestors 'none'",
+                "base-uri 'self'",
+                "form-action 'self'"
+            ];
+        } else {
+            // Stricter CSP for production
+            $csp = [
+                "default-src 'self'",
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.tailwindcss.com",
+                "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://cdn.tailwindcss.com",
+                "font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com data:",
+                "img-src 'self' data: https:",
+                "connect-src 'self'",
+                "frame-ancestors 'none'",
+                "base-uri 'self'",
+                "form-action 'self'"
+            ];
+        }
         
         $response->setHeader('Content-Security-Policy', implode('; ', $csp));
         
