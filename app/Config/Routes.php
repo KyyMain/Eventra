@@ -42,6 +42,11 @@ $routes->group('admin', function($routes) {
     
     // Reports
     $routes->get('reports', 'AdminController::reports');
+    
+    // Export routes
+    $routes->get('reports/export/events', 'AdminController::exportEvents');
+    $routes->get('reports/export/users', 'AdminController::exportUsers');
+    $routes->get('reports/export/registrations', 'AdminController::exportRegistrations');
 });
 
 // User routes

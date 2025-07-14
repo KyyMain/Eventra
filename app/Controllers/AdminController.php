@@ -497,4 +497,207 @@ class AdminController extends BaseController
             return redirect()->back()->with('error', 'Terjadi kesalahan saat update status.');
         }
     }
+
+    // Export Methods
+    public function exportEvents()
+    {
+        $authCheck = $this->checkAdminAuth();
+        if ($authCheck) return $authCheck;
+
+        try {
+            // Get all events with creator information
+            $events = $this->eventModel
+                ->select('events.*, users.full_name as creator_name')
+                ->join('users', 'users.id = events.created_by')
+                ->orderBy('events.created_at', 'DESC')
+                ->findAll();
+
+            // Debug: Log the number of events found
+            log_message('info', 'Export Events: Found ' . count($events) . ' events');
+
+            // Create Excel content using HTML table
+            $filename = 'data_events_' . date('Y-m-d_H-i-s') . '.xls';
+            
+            // Set headers for download
+            header('Content-Type: application/vnd.ms-excel; charset=utf-8');
+            header('Content-Disposition: attachment; filename=' . $filename);
+            header('Pragma: no-cache');
+            header('Expires: 0');
+
+            // Start Excel content
+            echo '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+            echo '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Data Events</title></head>';
+            echo '<body>';
+            echo '<table border="1">';
+            
+            // Headers
+            echo '<tr style="background-color: #4CAF50; color: white; font-weight: bold;">';
+            echo '<th>ID</th>';
+            echo '<th>Judul Event</th>';
+            echo '<th>Deskripsi</th>';
+            echo '<th>Tipe Event</th>';
+            echo '<th>Speaker</th>';
+            echo '<th>Lokasi</th>';
+            echo '<th>Tanggal Mulai</th>';
+            echo '<th>Tanggal Selesai</th>';
+            echo '<th>Harga</th>';
+            echo '<th>Max Peserta</th>';
+            echo '<th>Peserta Saat Ini</th>';
+            echo '<th>Status</th>';
+            echo '<th>Dibuat Oleh</th>';
+            echo '<th>Tanggal Dibuat</th>';
+            echo '</tr>';
+
+            // Data rows
+            foreach ($events as $event) {
+                echo '<tr>';
+                echo '<td>' . $event['id'] . '</td>';
+                echo '<td>' . htmlspecialchars($event['title']) . '</td>';
+                echo '<td>' . htmlspecialchars(strip_tags($event['description'])) . '</td>';
+                echo '<td>' . ucfirst($event['type']) . '</td>';
+                echo '<td>' . htmlspecialchars($event['speaker']) . '</td>';
+                echo '<td>' . htmlspecialchars($event['location']) . '</td>';
+                echo '<td>' . date('d/m/Y H:i', strtotime($event['start_date'])) . '</td>';
+                echo '<td>' . date('d/m/Y H:i', strtotime($event['end_date'])) . '</td>';
+                echo '<td>Rp ' . number_format($event['price'], 0, ',', '.') . '</td>';
+                echo '<td>' . $event['max_participants'] . '</td>';
+                echo '<td>' . $event['current_participants'] . '</td>';
+                echo '<td>' . ucfirst($event['status']) . '</td>';
+                echo '<td>' . htmlspecialchars($event['creator_name']) . '</td>';
+                echo '<td>' . date('d/m/Y H:i', strtotime($event['created_at'])) . '</td>';
+                echo '</tr>';
+            }
+
+            echo '</table>';
+            echo '</body></html>';
+            exit;
+        } catch (\Exception $e) {
+            log_message('error', 'Export Events Error: ' . $e->getMessage());
+            return redirect()->to('/admin/reports')->with('error', 'Terjadi kesalahan saat export data event: ' . $e->getMessage());
+        }
+    }
+
+    public function exportUsers()
+    {
+        $authCheck = $this->checkAdminAuth();
+        if ($authCheck) return $authCheck;
+
+        // Get all users with registration count
+        $users = $this->userModel
+            ->select('users.*, COUNT(event_registrations.id) as total_registrations')
+            ->join('event_registrations', 'event_registrations.user_id = users.id', 'left')
+            ->groupBy('users.id')
+            ->orderBy('users.created_at', 'DESC')
+            ->findAll();
+
+        // Create Excel content using HTML table
+        $filename = 'data_users_' . date('Y-m-d_H-i-s') . '.xls';
+        
+        // Set headers for download
+        header('Content-Type: application/vnd.ms-excel; charset=utf-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        // Start Excel content
+        echo '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+        echo '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Data Users</title></head>';
+        echo '<body>';
+        echo '<table border="1">';
+        
+        // Headers
+        echo '<tr style="background-color: #2196F3; color: white; font-weight: bold;">';
+        echo '<th>ID</th>';
+        echo '<th>Username</th>';
+        echo '<th>Email</th>';
+        echo '<th>Nama Lengkap</th>';
+        echo '<th>Role</th>';
+        echo '<th>Status</th>';
+        echo '<th>Total Registrasi</th>';
+        echo '<th>Tanggal Daftar</th>';
+        echo '</tr>';
+
+        // Data rows
+        foreach ($users as $user) {
+            echo '<tr>';
+            echo '<td>' . $user['id'] . '</td>';
+            echo '<td>' . htmlspecialchars($user['username']) . '</td>';
+            echo '<td>' . htmlspecialchars($user['email']) . '</td>';
+            echo '<td>' . htmlspecialchars($user['full_name']) . '</td>';
+            echo '<td>' . ucfirst($user['role']) . '</td>';
+            echo '<td>' . ($user['is_active'] ? 'Aktif' : 'Tidak Aktif') . '</td>';
+            echo '<td>' . $user['total_registrations'] . '</td>';
+            echo '<td>' . date('d/m/Y H:i', strtotime($user['created_at'])) . '</td>';
+            echo '</tr>';
+        }
+
+        echo '</table>';
+        echo '</body></html>';
+        exit;
+    }
+
+    public function exportRegistrations()
+    {
+        $authCheck = $this->checkAdminAuth();
+        if ($authCheck) return $authCheck;
+
+        // Get all registrations with event and user information
+        $registrations = $this->registrationModel
+            ->select('event_registrations.*, events.title as event_title, events.start_date, events.end_date, events.location, users.full_name, users.email')
+            ->join('events', 'events.id = event_registrations.event_id')
+            ->join('users', 'users.id = event_registrations.user_id')
+            ->orderBy('event_registrations.created_at', 'DESC')
+            ->findAll();
+
+        // Create Excel content using HTML table
+        $filename = 'data_registrasi_' . date('Y-m-d_H-i-s') . '.xls';
+        
+        // Set headers for download
+        header('Content-Type: application/vnd.ms-excel; charset=utf-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        // Start Excel content
+        echo '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+        echo '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Data Registrasi</title></head>';
+        echo '<body>';
+        echo '<table border="1">';
+        
+        // Headers
+        echo '<tr style="background-color: #9C27B0; color: white; font-weight: bold;">';
+        echo '<th>ID Registrasi</th>';
+        echo '<th>Nama Peserta</th>';
+        echo '<th>Email Peserta</th>';
+        echo '<th>Judul Event</th>';
+        echo '<th>Tanggal Event</th>';
+        echo '<th>Lokasi Event</th>';
+        echo '<th>Status Registrasi</th>';
+        echo '<th>Status Pembayaran</th>';
+        echo '<th>Sertifikat Diterbitkan</th>';
+        echo '<th>Kode Sertifikat</th>';
+        echo '<th>Tanggal Registrasi</th>';
+        echo '</tr>';
+
+        // Data rows
+        foreach ($registrations as $registration) {
+            echo '<tr>';
+            echo '<td>' . $registration['id'] . '</td>';
+            echo '<td>' . htmlspecialchars($registration['full_name']) . '</td>';
+            echo '<td>' . htmlspecialchars($registration['email']) . '</td>';
+            echo '<td>' . htmlspecialchars($registration['event_title']) . '</td>';
+            echo '<td>' . date('d/m/Y', strtotime($registration['start_date'])) . ' - ' . date('d/m/Y', strtotime($registration['end_date'])) . '</td>';
+            echo '<td>' . htmlspecialchars($registration['location']) . '</td>';
+            echo '<td>' . ucfirst($registration['status']) . '</td>';
+            echo '<td>' . ucfirst($registration['payment_status']) . '</td>';
+            echo '<td>' . ($registration['certificate_issued'] ? 'Ya' : 'Tidak') . '</td>';
+            echo '<td>' . ($registration['certificate_code'] ?? '-') . '</td>';
+            echo '<td>' . date('d/m/Y H:i', strtotime($registration['created_at'])) . '</td>';
+            echo '</tr>';
+        }
+
+        echo '</table>';
+        echo '</body></html>';
+        exit;
+    }
 }

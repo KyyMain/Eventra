@@ -265,17 +265,17 @@
                 <a href="/admin/reports/export/events" 
                    class="flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition duration-200 shadow-sm">
                     <i class="fas fa-file-excel mr-2"></i>
-                    Export Data Event
+                    Export Data Event (Excel)
                 </a>
                 <a href="/admin/reports/export/users" 
                    class="flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition duration-200 shadow-sm">
-                    <i class="fas fa-file-csv mr-2"></i>
-                    Export Data User
+                    <i class="fas fa-file-excel mr-2"></i>
+                    Export Data User (Excel)
                 </a>
                 <a href="/admin/reports/export/registrations" 
                    class="flex items-center justify-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition duration-200 shadow-sm">
-                    <i class="fas fa-file-pdf mr-2"></i>
-                    Export Registrasi
+                    <i class="fas fa-file-excel mr-2"></i>
+                    Export Registrasi (Excel)
                 </a>
             </div>
             
