@@ -1,0 +1,209 @@
+<svg width="1400" height="1200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; text-anchor: middle; }
+      .process-text { font-family: Arial, sans-serif; font-size: 10px; text-anchor: middle; }
+      .decision-text { font-family: Arial, sans-serif; font-size: 9px; text-anchor: middle; }
+      .start-end { fill: #ff9999; stroke: #333; stroke-width: 2; }
+      .process { fill: #99ccff; stroke: #333; stroke-width: 1; }
+      .decision { fill: #ffff99; stroke: #333; stroke-width: 1; }
+      .data { fill: #ccffcc; stroke: #333; stroke-width: 1; }
+      .flow-line { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .yes-no { font-family: Arial, sans-serif; font-size: 8px; fill: #333; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="700" y="30" class="title">Flowchart Sistem Eventra - Proses Pendaftaran Event dan Pembayaran</text>
+  
+  <!-- Start -->
+  <ellipse cx="700" cy="80" rx="60" ry="25" class="start-end"/>
+  <text x="700" y="85" class="process-text">START</text>
+  
+  <!-- User Login Check -->
+  <polygon points="650,130 750,130 770,160 750,190 650,190 630,160" class="decision"/>
+  <text x="700" y="155" class="decision-text">User</text>
+  <text x="700" y="170" class="decision-text">Login?</text>
+  
+  <!-- Login Process -->
+  <rect x="500" y="220" width="100" height="40" class="process" rx="5"/>
+  <text x="550" y="245" class="process-text">Login/Register</text>
+  
+  <!-- View Events -->
+  <rect x="650" y="220" width="100" height="40" class="process" rx="5"/>
+  <text x="700" y="240" class="process-text">Lihat Daftar</text>
+  <text x="700" y="250" class="process-text">Event</text>
+  
+  <!-- Select Event -->
+  <rect x="650" y="300" width="100" height="40" class="process" rx="5"/>
+  <text x="700" y="320" class="process-text">Pilih Event</text>
+  
+  <!-- Event Available Check -->
+  <polygon points="650,370 750,370 770,400 750,430 650,430 630,400" class="decision"/>
+  <text x="700" y="395" class="decision-text">Event Tersedia</text>
+  <text x="700" y="410" class="decision-text">&amp; Kuota?</text>
+  
+  <!-- Already Registered Check -->
+  <polygon points="650,470 750,470 770,500 750,530 650,530 630,500" class="decision"/>
+  <text x="700" y="495" class="decision-text">Sudah</text>
+  <text x="700" y="510" class="decision-text">Terdaftar?</text>
+  
+  <!-- Register Event -->
+  <rect x="650" y="570" width="100" height="40" class="process" rx="5"/>
+  <text x="700" y="590" class="process-text">Daftar Event</text>
+  
+  <!-- Event Price Check -->
+  <polygon points="650,640 750,640 770,670 750,700 650,700 630,670" class="decision"/>
+  <text x="700" y="665" class="decision-text">Event</text>
+  <text x="700" y="680" class="decision-text">Berbayar?</text>
+  
+  <!-- Free Event Success -->
+  <rect x="450" y="730" width="120" height="40" class="process" rx="5"/>
+  <text x="510" y="745" class="process-text">Pendaftaran</text>
+  <text x="510" y="755" class="process-text">Berhasil (Gratis)</text>
+  
+  <!-- Payment Method Selection -->
+  <rect x="650" y="730" width="100" height="40" class="process" rx="5"/>
+  <text x="700" y="745" class="process-text">Pilih Metode</text>
+  <text x="700" y="755" class="process-text">Pembayaran</text>
+  
+  <!-- Create Payment -->
+  <rect x="650" y="800" width="100" height="40" class="process" rx="5"/>
+  <text x="700" y="815" class="process-text">Buat</text>
+  <text x="700" y="825" class="process-text">Pembayaran</text>
+  
+  <!-- Payment Instructions -->
+  <rect x="650" y="870" width="100" height="40" class="process" rx="5"/>
+  <text x="700" y="885" class="process-text">Tampilkan</text>
+  <text x="700" y="895" class="process-text">Instruksi</text>
+  
+  <!-- Payment Process -->
+  <rect x="850" y="870" width="120" height="40" class="process" rx="5"/>
+  <text x="910" y="885" class="process-text">Proses Pembayaran</text>
+  <text x="910" y="895" class="process-text">(Payment Gateway)</text>
+  
+  <!-- Payment Status Check -->
+  <polygon points="850,940 950,940 970,970 950,1000 850,1000 830,970" class="decision"/>
+  <text x="900" y="965" class="decision-text">Pembayaran</text>
+  <text x="900" y="980" class="decision-text">Berhasil?</text>
+  
+  <!-- Payment Success -->
+  <rect x="650" y="1030" width="100" height="40" class="process" rx="5"/>
+  <text x="700" y="1045" class="process-text">Update Status</text>
+  <text x="700" y="1055" class="process-text">Terbayar</text>
+  
+  <!-- Send Confirmation -->
+  <rect x="650" y="1100" width="100" height="40" class="process" rx="5"/>
+  <text x="700" y="1115" class="process-text">Kirim Email</text>
+  <text x="700" y="1125" class="process-text">Konfirmasi</text>
+  
+  <!-- End Success -->
+  <ellipse cx="700" cy="1180" rx="60" ry="25" class="start-end"/>
+  <text x="700" y="1185" class="process-text">END (Success)</text>
+  
+  <!-- Error Paths -->
+  <!-- Event Not Available -->
+  <rect x="900" y="380" width="120" height="40" class="process" rx="5"/>
+  <text x="960" y="395" class="process-text">Tampilkan Pesan</text>
+  <text x="960" y="405" class="process-text">Event Tidak Tersedia</text>
+  
+  <!-- Already Registered -->
+  <rect x="900" y="480" width="120" height="40" class="process" rx="5"/>
+  <text x="960" y="495" class="process-text">Tampilkan Pesan</text>
+  <text x="960" y="505" class="process-text">Sudah Terdaftar</text>
+  
+  <!-- Payment Failed -->
+  <rect x="1050" y="1030" width="120" height="40" class="process" rx="5"/>
+  <text x="1110" y="1045" class="process-text">Update Status</text>
+  <text x="1110" y="1055" class="process-text">Gagal/Expired</text>
+  
+  <!-- End Error -->
+  <ellipse cx="1110" cy="1120" rx="60" ry="25" class="start-end"/>
+  <text x="1110" y="1125" class="process-text">END (Error)</text>
+  
+  <!-- Admin Flow (Right Side) -->
+  <text x="1200" y="80" class="title" font-size="14">Admin Flow</text>
+  
+  <!-- Admin Login -->
+  <rect x="1150" y="120" width="100" height="40" class="process" rx="5"/>
+  <text x="1200" y="140" class="process-text">Admin Login</text>
+  
+  <!-- Admin Dashboard -->
+  <rect x="1150" y="180" width="100" height="40" class="process" rx="5"/>
+  <text x="1200" y="200" class="process-text">Dashboard Admin</text>
+  
+  <!-- Manage Events -->
+  <rect x="1150" y="240" width="100" height="40" class="process" rx="5"/>
+  <text x="1200" y="260" class="process-text">Kelola Event</text>
+  
+  <!-- Manage Users -->
+  <rect x="1150" y="300" width="100" height="40" class="process" rx="5"/>
+  <text x="1200" y="320" class="process-text">Kelola User</text>
+  
+  <!-- Manage Registrations -->
+  <rect x="1150" y="360" width="100" height="40" class="process" rx="5"/>
+  <text x="1200" y="380" class="process-text">Kelola Pendaftaran</text>
+  
+  <!-- View Reports -->
+  <rect x="1150" y="420" width="100" height="40" class="process" rx="5"/>
+  <text x="1200" y="440" class="process-text">Lihat Laporan</text>
+  
+  <!-- Flow Lines -->
+  <!-- Main Flow -->
+  <line x1="700" y1="105" x2="700" y2="130" class="flow-line"/>
+  <line x1="630" y1="160" x2="550" y2="220" class="flow-line"/>
+  <line x1="550" y1="260" x2="700" y2="220" class="flow-line"/>
+  <line x1="700" y1="190" x2="700" y2="220" class="flow-line"/>
+  <line x1="700" y1="260" x2="700" y2="300" class="flow-line"/>
+  <line x1="700" y1="340" x2="700" y2="370" class="flow-line"/>
+  <line x1="700" y1="430" x2="700" y2="470" class="flow-line"/>
+  <line x1="700" y1="530" x2="700" y2="570" class="flow-line"/>
+  <line x1="700" y1="610" x2="700" y2="640" class="flow-line"/>
+  <line x1="630" y1="670" x2="510" y2="730" class="flow-line"/>
+  <line x1="700" y1="700" x2="700" y2="730" class="flow-line"/>
+  <line x1="700" y1="770" x2="700" y2="800" class="flow-line"/>
+  <line x1="700" y1="840" x2="700" y2="870" class="flow-line"/>
+  <line x1="750" y1="890" x2="850" y2="890" class="flow-line"/>
+  <line x1="910" y1="910" x2="900" y2="940" class="flow-line"/>
+  <line x1="830" y1="970" x2="700" y2="1030" class="flow-line"/>
+  <line x1="700" y1="1070" x2="700" y2="1100" class="flow-line"/>
+  <line x1="700" y1="1140" x2="700" y2="1155" class="flow-line"/>
+  
+  <!-- Error Flows -->
+  <line x1="770" y1="400" x2="900" y2="400" class="flow-line"/>
+  <line x1="770" y1="500" x2="900" y2="500" class="flow-line"/>
+  <line x1="970" y1="970" x2="1110" y2="1030" class="flow-line"/>
+  <line x1="1110" y1="1070" x2="1110" y2="1095" class="flow-line"/>
+  
+  <!-- Return to Events List -->
+  <line x1="960" y1="420" x2="960" y2="450" class="flow-line"/>
+  <line x1="960" y1="450" x2="700" y2="450" class="flow-line"/>
+  <line x1="700" y1="450" x2="700" y2="300" class="flow-line"/>
+  
+  <line x1="960" y1="520" x2="960" y2="550" class="flow-line"/>
+  <line x1="960" y1="550" x2="700" y2="550" class="flow-line"/>
+  <line x1="700" y1="550" x2="700" y2="300" class="flow-line"/>
+  
+  <!-- Admin Flow Lines -->
+  <line x1="1200" y1="160" x2="1200" y2="180" class="flow-line"/>
+  <line x1="1200" y1="220" x2="1200" y2="240" class="flow-line"/>
+  <line x1="1200" y1="280" x2="1200" y2="300" class="flow-line"/>
+  <line x1="1200" y1="340" x2="1200" y2="360" class="flow-line"/>
+  <line x1="1200" y1="400" x2="1200" y2="420" class="flow-line"/>
+  
+  <!-- Labels for Decision Points -->
+  <text x="580" y="150" class="yes-no">No</text>
+  <text x="720" y="210" class="yes-no">Yes</text>
+  <text x="820" y="390" class="yes-no">No</text>
+  <text x="720" y="460" class="yes-no">Yes</text>
+  <text x="820" y="490" class="yes-no">Yes</text>
+  <text x="720" y="560" class="yes-no">No</text>
+  <text x="580" y="680" class="yes-no">No</text>
+  <text x="720" y="720" class="yes-no">Yes</text>
+  <text x="780" y="960" class="yes-no">Yes</text>
+  <text x="1020" y="960" class="yes-no">No</text>
+  
+</svg>

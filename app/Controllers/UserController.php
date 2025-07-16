@@ -182,11 +182,18 @@ class UserController extends BaseController
         ];
 
         try {
-            if ($this->registrationModel->insert($registrationData)) {
+            $registrationId = $this->registrationModel->insert($registrationData);
+            if ($registrationId) {
                 // Increment participant count
                 $this->eventModel->incrementParticipants($eventId);
                 
-                return redirect()->back()->with('success', 'Berhasil mendaftar event! Silakan lakukan pembayaran jika diperlukan.');
+                // If event is paid, redirect to payment selection
+                if ($event['price'] > 0) {
+                    return redirect()->to('/payment/select-method/' . $registrationId)
+                        ->with('success', 'Berhasil mendaftar event! Silakan lakukan pembayaran untuk menyelesaikan pendaftaran.');
+                } else {
+                    return redirect()->back()->with('success', 'Berhasil mendaftar event gratis!');
+                }
             } else {
                 return redirect()->back()->with('error', 'Terjadi kesalahan saat mendaftar event.');
             }

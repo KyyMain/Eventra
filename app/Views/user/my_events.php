@@ -105,7 +105,7 @@
                                     <div class="flex items-center">
                                         <i class="fas fa-credit-card w-4 mr-2"></i>
                                         <span class="<?= $registration['payment_status'] === 'paid' ? 'text-green-600' : ($registration['payment_status'] === 'pending' ? 'text-yellow-600' : 'text-red-600') ?>">
-                                            <?= ucfirst($registration['payment_status']) ?>
+                                            <?= $registration['payment_status'] === 'paid' ? 'Lunas' : ($registration['payment_status'] === 'pending' ? 'Menunggu Pembayaran' : ucfirst($registration['payment_status'])) ?>
                                         </span>
                                     </div>
                                 <?php endif; ?>
@@ -125,19 +125,27 @@
                                     <?php endif; ?>
                                 </div>
                                 
-                                <?php if ($registration['status'] === 'registered'): ?>
-                                    <?php if (strtotime($registration['event_start_date']) > time()): ?>
-                                        <?= form_open('user/registrations/cancel/' . $registration['id'], ['class' => 'inline', 'onsubmit' => "return confirm('Apakah Anda yakin ingin membatalkan registrasi?')"]) ?>
-                                            <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
-                                                <i class="fas fa-times mr-1"></i>Batalkan
-                                            </button>
-                                        <?= form_close() ?>
-                                    <?php else: ?>
-                                        <span class="text-gray-400 font-medium cursor-not-allowed" title="Event sudah dimulai, tidak dapat dibatalkan">
-                                            <i class="fas fa-times mr-1"></i>Tidak dapat dibatalkan
-                                        </span>
+                                <div class="flex space-x-3">
+                                    <?php if ($registration['status'] === 'registered' && $registration['payment_status'] === 'pending' && $registration['event_price'] > 0): ?>
+                                        <a href="/payment/select-method/<?= $registration['id'] ?>" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition duration-200">
+                                            <i class="fas fa-credit-card mr-1"></i>Bayar Sekarang
+                                        </a>
                                     <?php endif; ?>
-                                <?php endif; ?>
+                                    
+                                    <?php if ($registration['status'] === 'registered'): ?>
+                                        <?php if (strtotime($registration['event_start_date']) > time()): ?>
+                                            <?= form_open('user/registrations/cancel/' . $registration['id'], ['class' => 'inline', 'onsubmit' => "return confirm('Apakah Anda yakin ingin membatalkan registrasi?')"]) ?>
+                                                <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
+                                                    <i class="fas fa-times mr-1"></i>Batalkan
+                                                </button>
+                                            <?= form_close() ?>
+                                        <?php else: ?>
+                                            <span class="text-gray-400 font-medium cursor-not-allowed" title="Event sudah dimulai, tidak dapat dibatalkan">
+                                                <i class="fas fa-times mr-1"></i>Tidak dapat dibatalkan
+                                            </span>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -25,6 +25,8 @@
 - [📱 Fitur Aplikasi](#-fitur-aplikasi)
 - [🔒 Keamanan](#-keamanan)
 - [📊 Struktur Database](#-struktur-database)
+- [🎨 Screenshots](#-screenshots)
+- [📋 Diagram dan Dokumentasi](#-diagram-dan-dokumentasi)
 - [🤝 Kontribusi](#-kontribusi)
 - [📄 Lisensi](#-lisensi)
 
@@ -286,14 +288,73 @@ Eventra dilengkapi dengan fitur keamanan tingkat enterprise:
 
 ## 🎨 Screenshots
 
-### Dashboard Admin
-![Admin Dashboard](docs/images/admin-dashboard.png)
+### 🔐 Halaman Login
+![Login Page](doc/login.png)
+*Halaman login yang aman dengan validasi input dan CSRF protection*
 
-### Event Management
-![Event Management](docs/images/event-management.png)
+### 📝 Halaman Registrasi
+![Registration Page](doc/register.png)
+*Form registrasi pengguna baru dengan validasi real-time*
 
-### User Registration
-![User Registration](docs/images/user-registration.png)
+### 📊 Dashboard Admin
+![Admin Dashboard](doc/dashboardAdmin.png)
+*Dashboard admin dengan statistik lengkap dan monitoring sistem*
+
+### 👤 Dashboard User
+![User Dashboard](doc/dashboarduser.png)
+*Dashboard pengguna dengan event yang diikuti dan statistik personal*
+
+### 🎪 Manajemen Event (Admin)
+![Event Management](doc/manajemeneventadmin.png)
+*Interface admin untuk mengelola event - create, read, update, delete*
+
+### 👥 Manajemen User (Admin)
+![User Management](doc/manajemenuseradmin.png)
+*Panel admin untuk mengelola pengguna dan hak akses*
+
+### 📈 Laporan dan Analytics
+![Reports](doc/reports.png)
+*Sistem pelaporan dengan grafik dan export data*
+
+### 🏆 Sertifikat Digital
+![Certificate](doc/cert.png)
+*Sertifikat digital yang dapat diunduh peserta setelah menyelesaikan event*
+
+### 📁 Dokumentasi Visual
+Semua screenshot dan dokumentasi visual tersimpan di folder `doc/` yang berisi:
+- `login.png` - Interface halaman login
+- `register.png` - Form pendaftaran pengguna
+- `dashboardAdmin.png` - Dashboard administrator
+- `dashboarduser.png` - Dashboard pengguna
+- `manajemeneventadmin.png` - Panel manajemen event
+- `manajemenuseradmin.png` - Panel manajemen user
+- `reports.png` - Sistem pelaporan dan analytics
+- `cert.png` - Template sertifikat digital
+
+---
+
+## 📋 Diagram dan Dokumentasi
+
+### 🎯 Use Case Diagram
+![Use Case Diagram](use_case_diagram.svg)
+*Diagram use case yang menggambarkan interaksi antara User, Admin, dan Payment Gateway dengan sistem Eventra*
+
+### 🔄 Flowchart Proses Bisnis
+![Flowchart](flowchart_eventra.svg)
+*Flowchart yang menunjukkan alur proses pendaftaran event dan pembayaran dari awal hingga selesai*
+
+### 📚 Dokumentasi Lengkap
+- **[DOKUMENTASI_DIAGRAM.md](DOKUMENTASI_DIAGRAM.md)** - Penjelasan detail tentang use case diagram dan flowchart
+- **[README_DIAGRAMS.md](README_DIAGRAMS.md)** - Panduan cara membaca dan menggunakan diagram
+- **[CODE_QUALITY_GUIDE.md](CODE_QUALITY_GUIDE.md)** - Panduan kualitas kode dan best practices
+
+### 🏗️ Arsitektur Sistem
+Sistem Eventra menggunakan arsitektur modern dengan:
+- **MVC Pattern** - Model-View-Controller untuk separation of concerns
+- **Service Layer** - Business logic terpisah dari controller
+- **Repository Pattern** - Abstraksi data access layer
+- **DTO (Data Transfer Object)** - Struktur data yang konsisten
+- **Event-Driven Architecture** - Sistem event untuk audit trails
 
 ---
 

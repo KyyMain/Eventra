@@ -2,110 +2,196 @@
 
 namespace App\Validation;
 
+use App\Models\EventRegistrationModel;
+use App\Models\PaymentMethodModel;
+use App\Models\PaymentModel;
+
 class CustomRules
 {
     /**
-     * Validate strong password
+     * Validate if registration belongs to user
      */
-    public function strong_password(string $str, string &$error = null): bool
+    public function valid_user_registration(string $registrationId, string $params, array $data): bool
     {
-        if (strlen($str) < 8) {
-            $error = 'Password must be at least 8 characters long.';
+        $userId = session()->get('user_id');
+        if (!$userId) {
             return false;
         }
-        
-        if (!preg_match('/[A-Z]/', $str)) {
-            $error = 'Password must contain at least one uppercase letter.';
-            return false;
-        }
-        
-        if (!preg_match('/[a-z]/', $str)) {
-            $error = 'Password must contain at least one lowercase letter.';
-            return false;
-        }
-        
-        if (!preg_match('/[0-9]/', $str)) {
-            $error = 'Password must contain at least one number.';
-            return false;
-        }
-        
-        if (!preg_match('/[^A-Za-z0-9]/', $str)) {
-            $error = 'Password must contain at least one special character.';
-            return false;
-        }
-        
-        return true;
+
+        $registrationModel = new EventRegistrationModel();
+        $registration = $registrationModel
+            ->where('id', $registrationId)
+            ->where('user_id', $userId)
+            ->first();
+
+        return $registration !== null;
     }
-    
+
     /**
-     * Validate unique email (excluding current user)
+     * Validate if payment method is active
      */
-    public function unique_email(string $str, string $fields, array $data): bool
+    public function active_payment_method(string $paymentMethodId, string $params, array $data): bool
     {
-        $db = \Config\Database::connect();
-        $builder = $db->table('users');
-        
-        $builder->where('email', $str);
-        
-        // If updating, exclude current user
-        if (isset($data['id'])) {
-            $builder->where('id !=', $data['id']);
-        }
-        
-        return $builder->countAllResults() === 0;
+        $paymentMethodModel = new PaymentMethodModel();
+        $method = $paymentMethodModel
+            ->where('id', $paymentMethodId)
+            ->where('is_active', 1)
+            ->first();
+
+        return $method !== null;
     }
-    
+
     /**
-     * Validate unique username (excluding current user)
+     * Validate if registration doesn't have pending payment
      */
-    public function unique_username(string $str, string $fields, array $data): bool
+    public function no_pending_payment(string $registrationId, string $params, array $data): bool
     {
-        $db = \Config\Database::connect();
-        $builder = $db->table('users');
-        
-        $builder->where('username', $str);
-        
-        // If updating, exclude current user
-        if (isset($data['id'])) {
-            $builder->where('id !=', $data['id']);
-        }
-        
-        return $builder->countAllResults() === 0;
+        $paymentModel = new PaymentModel();
+        $pendingPayment = $paymentModel
+            ->where('registration_id', $registrationId)
+            ->where('status', 'pending')
+            ->where('expired_at >', date('Y-m-d H:i:s'))
+            ->first();
+
+        return $pendingPayment === null;
     }
-    
+
     /**
-     * Validate event date is in future
+     * Validate payment code format
      */
-    public function future_date(string $str, string &$error = null): bool
+    public function valid_payment_code(string $paymentCode, string $params, array $data): bool
     {
-        $eventDate = strtotime($str);
-        $now = time();
-        
-        if ($eventDate <= $now) {
-            $error = 'Event date must be in the future.';
+        // Payment code should be: PAY + YYYYMMDD + 6 digits
+        $pattern = '/^PAY\d{8}\d{6}$/';
+        return preg_match($pattern, $paymentCode) === 1;
+    }
+
+    /**
+     * Validate if payment amount matches event price
+     */
+    public function valid_payment_amount(string $amount, string $params, array $data): bool
+    {
+        if (!isset($data['registration_id'])) {
             return false;
         }
-        
-        return true;
+
+        $registrationModel = new EventRegistrationModel();
+        $registration = $registrationModel
+            ->select('events.price')
+            ->join('events', 'events.id = event_registrations.event_id')
+            ->where('event_registrations.id', $data['registration_id'])
+            ->first();
+
+        if (!$registration) {
+            return false;
+        }
+
+        return floatval($amount) === floatval($registration['price']);
     }
-    
+
     /**
-     * Validate event capacity
+     * Validate virtual account format
      */
-    public function valid_capacity(string $str, string &$error = null): bool
+    public function valid_virtual_account(string $virtualAccount, string $params, array $data): bool
     {
-        $capacity = (int) $str;
-        
-        if ($capacity < 1) {
-            $error = 'Event capacity must be at least 1.';
-            return false;
+        // Virtual account should be numeric and between 10-16 digits
+        return preg_match('/^\d{10,16}$/', $virtualAccount) === 1;
+    }
+
+    /**
+     * Validate QR code format
+     */
+    public function valid_qr_code(string $qrCode, string $params, array $data): bool
+    {
+        // QR code should be a valid URL or base64 encoded string
+        return filter_var($qrCode, FILTER_VALIDATE_URL) !== false || 
+               base64_decode($qrCode, true) !== false;
+    }
+
+    /**
+     * Validate payment expiration time
+     */
+    public function valid_expiration(string $expiredAt, string $params, array $data): bool
+    {
+        $expiredTime = strtotime($expiredAt);
+        $currentTime = time();
+        $maxExpiration = strtotime('+7 days'); // Maximum 7 days
+
+        return $expiredTime > $currentTime && $expiredTime <= $maxExpiration;
+    }
+
+    /**
+     * Validate callback data JSON format
+     */
+    public function valid_callback_data(?string $callbackData, string $params, array $data): bool
+    {
+        if ($callbackData === null || $callbackData === '') {
+            return true; // Null/empty is allowed
         }
-        
-        if ($capacity > 10000) {
-            $error = 'Event capacity cannot exceed 10,000.';
-            return false;
-        }
-        
-        return true;
+
+        json_decode($callbackData);
+        return json_last_error() === JSON_ERROR_NONE;
+    }
+
+    /**
+     * Validate payment status
+     */
+    public function valid_payment_status(string $status, string $params, array $data): bool
+    {
+        $validStatuses = ['pending', 'paid', 'expired', 'cancelled', 'failed'];
+        return in_array($status, $validStatuses);
+    }
+
+    /**
+     * Error messages for custom rules
+     */
+    public function valid_user_registration_errors(): string
+    {
+        return 'Pendaftaran tidak valid atau tidak ditemukan.';
+    }
+
+    public function active_payment_method_errors(): string
+    {
+        return 'Metode pembayaran tidak aktif atau tidak valid.';
+    }
+
+    public function no_pending_payment_errors(): string
+    {
+        return 'Sudah ada pembayaran yang sedang menunggu untuk pendaftaran ini.';
+    }
+
+    public function valid_payment_code_errors(): string
+    {
+        return 'Format kode pembayaran tidak valid.';
+    }
+
+    public function valid_payment_amount_errors(): string
+    {
+        return 'Jumlah pembayaran tidak sesuai dengan harga event.';
+    }
+
+    public function valid_virtual_account_errors(): string
+    {
+        return 'Format virtual account tidak valid.';
+    }
+
+    public function valid_qr_code_errors(): string
+    {
+        return 'Format QR code tidak valid.';
+    }
+
+    public function valid_expiration_errors(): string
+    {
+        return 'Waktu kadaluarsa tidak valid.';
+    }
+
+    public function valid_callback_data_errors(): string
+    {
+        return 'Format callback data harus berupa JSON yang valid.';
+    }
+
+    public function valid_payment_status_errors(): string
+    {
+        return 'Status pembayaran tidak valid.';
     }
 }

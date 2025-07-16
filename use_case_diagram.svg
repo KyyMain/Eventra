@@ -1,0 +1,184 @@
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; text-anchor: middle; }
+      .actor { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; }
+      .usecase { font-family: Arial, sans-serif; font-size: 10px; text-anchor: middle; }
+      .system-boundary { fill: none; stroke: #333; stroke-width: 2; stroke-dasharray: 5,5; }
+      .actor-line { stroke: #333; stroke-width: 1; }
+      .usecase-oval { fill: #e6f3ff; stroke: #333; stroke-width: 1; }
+      .include-line { stroke: #666; stroke-width: 1; stroke-dasharray: 3,3; }
+      .extend-line { stroke: #999; stroke-width: 1; stroke-dasharray: 2,2; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="600" y="30" class="title">Use Case Diagram - Sistem Manajemen Event Eventra</text>
+  
+  <!-- System Boundary -->
+  <rect x="200" y="60" width="800" height="700" class="system-boundary" rx="10"/>
+  <text x="600" y="80" class="title" font-size="14">Sistem Eventra</text>
+  
+  <!-- Actors -->
+  <!-- User -->
+  <g id="user-actor">
+    <circle cx="100" cy="150" r="15" fill="#ffcc99" stroke="#333"/>
+    <line x1="100" y1="165" x2="100" y2="200" class="actor-line"/>
+    <line x1="85" y1="180" x2="115" y2="180" class="actor-line"/>
+    <line x1="100" y1="200" x2="85" y2="230" class="actor-line"/>
+    <line x1="100" y1="200" x2="115" y2="230" class="actor-line"/>
+    <text x="100" y="250" class="actor">User</text>
+  </g>
+  
+  <!-- Admin -->
+  <g id="admin-actor">
+    <circle cx="100" cy="400" r="15" fill="#ffcc99" stroke="#333"/>
+    <line x1="100" y1="415" x2="100" y2="450" class="actor-line"/>
+    <line x1="85" y1="430" x2="115" y2="430" class="actor-line"/>
+    <line x1="100" y1="450" x2="85" y2="480" class="actor-line"/>
+    <line x1="100" y1="450" x2="115" y2="480" class="actor-line"/>
+    <text x="100" y="500" class="actor">Admin</text>
+  </g>
+  
+  <!-- Payment Gateway -->
+  <g id="payment-gateway-actor">
+    <circle cx="1100" cy="300" r="15" fill="#ffcc99" stroke="#333"/>
+    <line x1="1100" y1="315" x2="1100" y2="350" class="actor-line"/>
+    <line x1="1085" y1="330" x2="1115" y2="330" class="actor-line"/>
+    <line x1="1100" y1="350" x2="1085" y2="380" class="actor-line"/>
+    <line x1="1100" y1="350" x2="1115" y2="380" class="actor-line"/>
+    <text x="1100" y="400" class="actor">Payment Gateway</text>
+  </g>
+  
+  <!-- Use Cases for User -->
+  <!-- Authentication -->
+  <ellipse cx="300" cy="120" rx="60" ry="25" class="usecase-oval"/>
+  <text x="300" y="125" class="usecase">Login/Register</text>
+  
+  <ellipse cx="450" cy="120" rx="50" ry="25" class="usecase-oval"/>
+  <text x="450" y="125" class="usecase">Kelola Profil</text>
+  
+  <!-- Event Management for User -->
+  <ellipse cx="300" cy="180" rx="60" ry="25" class="usecase-oval"/>
+  <text x="300" y="185" class="usecase">Lihat Daftar Event</text>
+  
+  <ellipse cx="450" cy="180" rx="50" ry="25" class="usecase-oval"/>
+  <text x="450" y="185" class="usecase">Lihat Detail Event</text>
+  
+  <ellipse cx="300" cy="240" rx="60" ry="25" class="usecase-oval"/>
+  <text x="300" y="245" class="usecase">Daftar Event</text>
+  
+  <ellipse cx="450" cy="240" rx="50" ry="25" class="usecase-oval"/>
+  <text x="450" y="245" class="usecase">Batalkan Pendaftaran</text>
+  
+  <!-- Payment -->
+  <ellipse cx="600" cy="240" rx="60" ry="25" class="usecase-oval"/>
+  <text x="600" y="245" class="usecase">Pilih Metode Pembayaran</text>
+  
+  <ellipse cx="750" cy="240" rx="50" ry="25" class="usecase-oval"/>
+  <text x="750" y="245" class="usecase">Proses Pembayaran</text>
+  
+  <ellipse cx="600" cy="300" rx="60" ry="25" class="usecase-oval"/>
+  <text x="600" y="305" class="usecase">Lihat Status Pembayaran</text>
+  
+  <!-- Dashboard and Reports -->
+  <ellipse cx="300" cy="300" rx="60" ry="25" class="usecase-oval"/>
+  <text x="300" y="305" class="usecase">Lihat Dashboard</text>
+  
+  <ellipse cx="450" cy="300" rx="50" ry="25" class="usecase-oval"/>
+  <text x="450" y="305" class="usecase">Lihat Event Saya</text>
+  
+  <!-- Certificate -->
+  <ellipse cx="300" cy="360" rx="60" ry="25" class="usecase-oval"/>
+  <text x="300" y="365" class="usecase">Lihat Sertifikat</text>
+  
+  <!-- Use Cases for Admin -->
+  <!-- Event Management for Admin -->
+  <ellipse cx="300" cy="450" rx="60" ry="25" class="usecase-oval"/>
+  <text x="300" y="455" class="usecase">Kelola Event</text>
+  
+  <ellipse cx="450" cy="450" rx="50" ry="25" class="usecase-oval"/>
+  <text x="450" y="455" class="usecase">Buat Event</text>
+  
+  <ellipse cx="600" cy="450" rx="50" ry="25" class="usecase-oval"/>
+  <text x="600" y="455" class="usecase">Edit Event</text>
+  
+  <ellipse cx="750" cy="450" rx="50" ry="25" class="usecase-oval"/>
+  <text x="750" y="455" class="usecase">Hapus Event</text>
+  
+  <!-- User Management -->
+  <ellipse cx="300" cy="520" rx="60" ry="25" class="usecase-oval"/>
+  <text x="300" y="525" class="usecase">Kelola User</text>
+  
+  <ellipse cx="450" cy="520" rx="50" ry="25" class="usecase-oval"/>
+  <text x="450" y="525" class="usecase">Lihat Data User</text>
+  
+  <ellipse cx="600" cy="520" rx="50" ry="25" class="usecase-oval"/>
+  <text x="600" y="525" class="usecase">Export Data User</text>
+  
+  <!-- Registration Management -->
+  <ellipse cx="300" cy="580" rx="60" ry="25" class="usecase-oval"/>
+  <text x="300" y="585" class="usecase">Kelola Pendaftaran</text>
+  
+  <ellipse cx="450" cy="580" rx="50" ry="25" class="usecase-oval"/>
+  <text x="450" y="585" class="usecase">Verifikasi Kehadiran</text>
+  
+  <ellipse cx="600" cy="580" rx="50" ry="25" class="usecase-oval"/>
+  <text x="600" y="585" class="usecase">Terbitkan Sertifikat</text>
+  
+  <!-- Reports -->
+  <ellipse cx="300" cy="640" rx="60" ry="25" class="usecase-oval"/>
+  <text x="300" y="645" class="usecase">Lihat Laporan</text>
+  
+  <ellipse cx="450" cy="640" rx="50" ry="25" class="usecase-oval"/>
+  <text x="450" y="645" class="usecase">Dashboard Admin</text>
+  
+  <!-- Admin Dashboard -->
+  <ellipse cx="600" cy="640" rx="50" ry="25" class="usecase-oval"/>
+  <text x="600" y="645" class="usecase">Statistik Event</text>
+  
+  <!-- Payment Gateway Use Cases -->
+  <ellipse cx="850" cy="300" rx="60" ry="25" class="usecase-oval"/>
+  <text x="850" y="305" class="usecase">Validasi Pembayaran</text>
+  
+  <ellipse cx="850" cy="360" rx="60" ry="25" class="usecase-oval"/>
+  <text x="850" y="365" class="usecase">Kirim Notifikasi</text>
+  
+  <!-- Relationships -->
+  <!-- User to Use Cases -->
+  <line x1="115" y1="150" x2="240" y2="120" class="actor-line"/>
+  <line x1="115" y1="180" x2="240" y2="180" class="actor-line"/>
+  <line x1="115" y1="200" x2="240" y2="240" class="actor-line"/>
+  <line x1="115" y1="220" x2="240" y2="300" class="actor-line"/>
+  <line x1="115" y1="240" x2="240" y2="360" class="actor-line"/>
+  
+  <!-- Admin to Use Cases -->
+  <line x1="115" y1="400" x2="240" y2="450" class="actor-line"/>
+  <line x1="115" y1="420" x2="240" y2="520" class="actor-line"/>
+  <line x1="115" y1="440" x2="240" y2="580" class="actor-line"/>
+  <line x1="115" y1="460" x2="240" y2="640" class="actor-line"/>
+  
+  <!-- Payment Gateway to Use Cases -->
+  <line x1="1040" y1="300" x2="910" y2="300" class="actor-line"/>
+  <line x1="1040" y1="320" x2="910" y2="360" class="actor-line"/>
+  
+  <!-- Include/Extend Relationships -->
+  <line x1="360" y1="240" x2="540" y2="240" class="include-line"/>
+  <text x="450" y="230" class="usecase" font-size="8">&lt;&lt;include&gt;&gt;</text>
+  
+  <line x1="660" y1="240" x2="690" y2="240" class="include-line"/>
+  <text x="675" y="230" class="usecase" font-size="8">&lt;&lt;include&gt;&gt;</text>
+  
+  <line x1="810" y1="240" x2="790" y2="300" class="extend-line"/>
+  <text x="800" y="270" class="usecase" font-size="8">&lt;&lt;extend&gt;&gt;</text>
+  
+  <line x1="360" y1="450" x2="390" y2="450" class="include-line"/>
+  <text x="375" y="440" class="usecase" font-size="8">&lt;&lt;include&gt;&gt;</text>
+  
+  <line x1="360" y1="520" x2="390" y2="520" class="include-line"/>
+  <text x="375" y="510" class="usecase" font-size="8">&lt;&lt;include&gt;&gt;</text>
+  
+  <line x1="360" y1="580" x2="390" y2="580" class="include-line"/>
+  <text x="375" y="570" class="usecase" font-size="8">&lt;&lt;include&gt;&gt;</text>
+  
+</svg>

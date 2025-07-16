@@ -68,6 +68,20 @@ $routes->group('user', function($routes) {
     $routes->post('certificates/verify', 'User\CertificateController::verify');
 });
 
+// Payment routes
+$routes->group('payment', function($routes) {
+    $routes->get('select-method/(:num)', 'PaymentController::selectMethod/$1');
+    $routes->post('create', 'PaymentController::createPayment');
+    $routes->get('instructions/(:segment)', 'PaymentController::instructions/$1');
+    $routes->get('status/(:segment)', 'PaymentController::checkStatus/$1');
+    $routes->post('callback', 'PaymentController::callback');
+    $routes->get('success/(:segment)', 'PaymentController::success/$1');
+    $routes->get('failed/(:segment)', 'PaymentController::failed/$1');
+    
+    // Development only - simulate payment
+    $routes->post('simulate/(:segment)', 'PaymentController::simulatePayment/$1');
+});
+
 // Public certificate verification
 $routes->get('verify-certificate', 'UserController::verifyCertificate');
 $routes->post('verify-certificate', 'UserController::verifyCertificate');
