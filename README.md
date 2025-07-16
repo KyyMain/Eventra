@@ -185,8 +185,8 @@ Aplikasi akan berjalan di `http://localhost:8080`
 Setelah menjalankan seeder, Anda dapat login dengan akun berikut:
 
 ### **Administrator**
-- **Email:** `admin@example.com`
-- **Password:** `admin123`
+- **Email:** `admin@eventra.com`
+- **Password:** `Admin123#`
 - **Role:** Admin
 
 ### **User Demo**
